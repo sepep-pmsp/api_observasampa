@@ -66,8 +66,8 @@ class QueryMaker:
 
     def table_as_df(self, table, limit=10):
     
-        rows = self.query_estrela('indicador', limit)
-        columns = self.get_col_names('indicador')
+        rows = self.query_estrela(table, limit)
+        columns = self.get_col_names(table)
         
         return pd.DataFrame(data = rows, columns = columns)
 
