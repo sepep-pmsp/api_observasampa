@@ -12,6 +12,8 @@ db_data = {
 'password': ''
 }
 
+SQLALCHEMY_DATABASE_URL = build_conn_str(**db_data)
+
     '''
 
 

@@ -1,20 +1,12 @@
 import pandas as pd
 import psycopg2
-from config import db_data
-
-def build_conn_str(user, password, host, port, 
-                       database, dbms='postgresql'):
-    
-    conn_str = f'{dbms}://{user}:{password}@{host}:{port}/{database}'
-    
-    return conn_str
+from config import SQLALCHEMY_DATABASE_URL
 
 def conn_tear_down(query_func):
     
     def func(*args, **kwargs):
         
-        conn_str = build_conn_str(**db_data)
-        conn = psycopg2.connect(conn_str)
+        conn = psycopg2.connect(SQLALCHEMY_DATABASE_URL)
         cursor = conn.cursor()
         try:
             result = query_func(*args, cursor = cursor, **kwargs)
