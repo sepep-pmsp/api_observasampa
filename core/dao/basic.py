@@ -24,3 +24,15 @@ def resultados_indicador(db: Session, cd_indicador: int):
     query = query.filter(basicmodels.ResultadoIndicador.cd_indicador==cd_indicador)
 
     return query.all()
+
+def list_regioes(db: Session, skip: int = 0, limit: int = 100):
+
+    query = db.query(basicmodels.Regiao).offset(skip).limit(limit)
+
+    return query.all()
+
+def list_periodos(db: Session, skip: int = 0, limit: int = 100):
+
+    query = db.query(basicmodels.Periodo).offset(skip).limit(limit)
+
+    return query.all()

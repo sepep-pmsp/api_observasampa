@@ -60,12 +60,12 @@ class ResultadoIndicador(OrmBase):
     vl_indicador_resultado : Union[str, None] = None
         
 
-class PeriodoResultado(OrmBase):
+class PeriodoResultado(Periodo):
 
     resultados : List[ResultadoIndicador] = []
 
 
-class RegiaoResultado(OrmBase):
+class RegiaoResultado(Regiao):
 
     resultados : List[ResultadoIndicador] = []
 

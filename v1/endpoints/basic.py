@@ -37,7 +37,7 @@ def read_indicador(cd_indicador: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Indicador Não Encontrado")
     return indicador
 
-@app.get("/resultados/{cd_indicador}", response_model=List[basicschemas.ResultadoIndicador],  tags=['Resultados'])
+@app.get("/indicadores/{cd_indicador}/resultados", response_model=List[basicschemas.ResultadoIndicador],  tags=['Indicadores', 'Resultados'])
 def read_indicador(cd_indicador: int, db: Session = Depends(get_db)):
 
     indicador = basicdao.get_indicador(db, cd_indicador=cd_indicador)
@@ -47,3 +47,17 @@ def read_indicador(cd_indicador: int, db: Session = Depends(get_db)):
     resultados = basicdao.resultados_indicador(db, cd_indicador=indicador.cd_indicador)
     
     return resultados
+
+
+@app.get("/regioes/", response_model=List[basicschemas.Regiao], tags=['Regiões'])
+def list_regioes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+
+    regioes = basicdao.list_regioes(db, skip=skip, limit=limit)
+    return regioes
+
+
+@app.get("/periodos/", response_model=List[basicschemas.Periodo], tags=['Períodos'])
+def list_periodos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+
+    periodos = basicdao.list_periodos(db, skip=skip, limit=limit)
+    return periodos
