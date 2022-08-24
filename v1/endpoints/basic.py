@@ -1,6 +1,8 @@
+from fastapi import APIRouter
+
 from typing import List
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from core.dao import basic as basicdao
@@ -10,7 +12,7 @@ from core.models.database import SessionLocal, engine
 
 basicmodels.Base.metadata.create_all(bind=engine)
 
-app = FastAPI()
+app = APIRouter()
 
 
 # Dependency
@@ -21,13 +23,13 @@ def get_db():
     finally:
         db.close()
 
-@app.get("/indicadores/", response_model=List[basicschemas.IndicadorBase])
+@app.get("/indicadores/", response_model=List[basicschemas.IndicadorBase], tags=['Indicadores'])
 def read_indicadores(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 
     indicadores = basicdao.list_indicadores(db, skip=skip, limit=limit)
     return indicadores
 
-@app.get("/indicadores/{cd_indicador}", response_model=basicschemas.IndicadorReport)
+@app.get("/indicadores/{cd_indicador}", response_model=basicschemas.IndicadorReport,  tags=['Indicadores'])
 def read_indicador(cd_indicador: int, db: Session = Depends(get_db)):
 
     indicador = basicdao.get_indicador(db, cd_indicador=cd_indicador)
@@ -35,7 +37,7 @@ def read_indicador(cd_indicador: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Indicador Não Encontrado")
     return indicador
 
-@app.get("/resultados/{cd_indicador}", response_model=List[basicschemas.ResultadoIndicador])
+@app.get("/resultados/{cd_indicador}", response_model=List[basicschemas.ResultadoIndicador],  tags=['Resultados'])
 def read_indicador(cd_indicador: int, db: Session = Depends(get_db)):
 
     indicador = basicdao.get_indicador(db, cd_indicador=cd_indicador)
