@@ -58,6 +58,7 @@ class ResultadoIndicador(Base):
 
     cd_sequencia_indicador_resultado = Column(Integer, index=True, primary_key=True)
     cd_indicador = Column(Integer, ForeignKey("indicador.cd_indicador"))
+    indicador = relationship("Indicador", back_populates="resultados")
     cd_regiao = Column(Integer, ForeignKey("regiao.cd_regiao"))
     regiao = relationship("Regiao", back_populates="resultados")
     cd_periodo = Column(Integer, ForeignKey("periodo.cd_periodo"))
