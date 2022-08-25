@@ -58,7 +58,7 @@ def indicadores_sexo_educacao_municipio(db: Session):
     fem = [(periodo_resultado(r), 'Feminino', valor_resultado(r))
             for r in fem]
 
-    masc = resultados_indicador(db, '27')
+    masc = resultados_indicador(db, '28')
     masc = resultados_por_nivel(masc, 'Município')
     masc = [(periodo_resultado(r), 'Masculino', valor_resultado(r))
             for r in masc]
@@ -71,8 +71,10 @@ def indicadores_sexo_educacao_municipio(db: Session):
 
     df = pd.DataFrame(dados, columns = ['Periodo', 'Sexo','Percentual de alunos'])
     df['Periodo'] = df['Periodo'].astype(int)
+    df['Percentual de alunos'] = df['Percentual de alunos'].astype(float)
+
     df = df.sort_values(by='Periodo')
 
-    df.to_csv(io, index=False)
+    df.to_csv(io, index=False,  sep=';', decimal=',')
 
     return io
