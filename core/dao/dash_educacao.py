@@ -5,6 +5,7 @@ from .basic import resultados_indicador
 from .filtros import resultados_por_nivel, periodo_resultado, valor_resultado
 
 import pandas as pd
+from io import StringIO
 
 desc_dados = """
 INDICADORES
@@ -66,13 +67,12 @@ def indicadores_sexo_educacao_municipio(db: Session):
     dados.extend(masc)
     dados.extend(fem)
 
+    io = StringIO()
+
     df = pd.DataFrame(dados, columns = ['Periodo', 'Sexo','Percentual de alunos'])
     df['Periodo'] = df['Periodo'].astype(int)
     df = df.sort_values(by='Periodo')
 
-    data = {
-        'name' : 'IndicadoresSexoEducacaoMunicipio',
-        'csv_data' : df.to_csv()
-    }
+    df.to_csv(io, index=False)
 
-    return data
+    return io
