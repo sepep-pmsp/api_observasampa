@@ -6,33 +6,56 @@ from ..schemas import basic as basicschemas
 
 def list_indicadores(db: Session, skip: int = 0, limit: int = 100):
 
-    query = db.query(basicmodels.Indicador).offset(skip).limit(limit)
+    model = basicmodels.Indicador
+    query = db.query(model)
+    query = query.filter(model.cd_tipo_situacao==1)
+    query = query.offset(skip).limit(limit)
 
 
     return query.all()
 
 def get_indicador(db: Session, cd_indicador: int):
 
-    query = db.query(basicmodels.Indicador)
-    query = query.filter(basicmodels.Indicador.cd_indicador==cd_indicador)
+    model = basicmodels.Indicador
+    query = db.query(model)
+    query = query.filter(model.cd_tipo_situacao==1)
+    query = query.filter(model.cd_indicador==cd_indicador)
 
     return query.first()
 
 def resultados_indicador(db: Session, cd_indicador: int):
 
-    query = db.query(basicmodels.ResultadoIndicador)
-    query = query.filter(basicmodels.ResultadoIndicador.cd_indicador==cd_indicador)
+    model = basicmodels.ResultadoIndicador
+    query = db.query(model)
+    query = query.filter(model.cd_tipo_situacao==1)
+    query = query.filter(model.cd_indicador==cd_indicador)
 
     return query.all()
 
 def list_regioes(db: Session, skip: int = 0, limit: int = 100):
 
-    query = db.query(basicmodels.Regiao).offset(skip).limit(limit)
+    model = basicmodels.Regiao
+    query = db.query(model)
+    query = query.filter(model.cd_tipo_situacao==1)
+    query = query.offset(skip).limit(limit)
+
+    return query.all()
+
+def list_niveis_regioes(db: Session, skip: int = 0, limit: int = 100):
+
+    model = basicmodels.NivelRegiao
+    query = db.query(model)
+    #Nivel regiao nao tem tipo de situacao
+    #query = query.filter(model.cd_tipo_situacao==1)
+    query = query.offset(skip).limit(limit)
 
     return query.all()
 
 def list_periodos(db: Session, skip: int = 0, limit: int = 100):
 
-    query = db.query(basicmodels.Periodo).offset(skip).limit(limit)
+    model = basicmodels.Periodo
+    query = db.query(model)
+    query = query.filter(model.cd_tipo_situacao==1)
+    query = query.offset(skip).limit(limit)
 
     return query.all()

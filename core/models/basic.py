@@ -30,8 +30,6 @@ class NivelRegiao(Base):
     sg_nivel_regiao = Column(String)
     regioes = relationship("Regiao", back_populates='nivel')
 
-    cd_tipo_situacao = Column(Integer)
-
 class Regiao(Base):
 
     __tablename__ = 'regiao'

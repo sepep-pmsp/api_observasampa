@@ -55,6 +55,12 @@ def list_regioes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db))
     regioes = basicdao.list_regioes(db, skip=skip, limit=limit)
     return regioes
 
+@app.get("/niveis/", response_model=List[basicschemas.NivelRegiao], tags=['Regiões'])
+def list_regioes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+
+    niveis = basicdao.list_niveis_regioes(db, skip=skip, limit=limit)
+    return niveis
+
 
 @app.get("/periodos/", response_model=List[basicschemas.Periodo], tags=['Períodos'])
 def list_periodos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
