@@ -18,6 +18,8 @@ class Indicador(Base):
     in_visibilidade = Column(Boolean)
     resultados = relationship("ResultadoIndicador")
 
+    cd_tipo_situacao = Column(Integer)
+
 class NivelRegiao(Base):
 
     __tablename__ = 'nivel_regiao'
@@ -27,6 +29,8 @@ class NivelRegiao(Base):
     dc_nivel_regiao = Column(String)
     sg_nivel_regiao = Column(String)
     regioes = relationship("Regiao", back_populates='nivel')
+
+    cd_tipo_situacao = Column(Integer)
 
 class Regiao(Base):
 
@@ -40,6 +44,8 @@ class Regiao(Base):
     nivel = relationship("NivelRegiao", back_populates='regioes')
     resultados = relationship("ResultadoIndicador", back_populates="regiao")
 
+    cd_tipo_situacao = Column(Integer)
+
 class Periodo(Base):
 
     __tablename__ = "periodo"
@@ -48,6 +54,8 @@ class Periodo(Base):
     cd_periodo = Column(Integer, index=True, primary_key=True)
     vl_periodo = Column(String)
     resultados = relationship("ResultadoIndicador", back_populates="periodo")
+
+    cd_tipo_situacao = Column(Integer)
 
 
 
@@ -65,6 +73,7 @@ class ResultadoIndicador(Base):
     periodo = relationship("Periodo", back_populates="resultados")
     vl_indicador_resultado = Column(String)
 
+    cd_tipo_situacao = Column(Integer)
 
 
     
