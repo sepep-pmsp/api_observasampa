@@ -34,6 +34,20 @@ def indicadores_sexo_educacao_municipio(db: Session = Depends(get_db)):
                             media_type="text/csv"
        )
     
-    response.headers["Content-Disposition"] = "attachment; filename=export.csv"
+    response.headers["Content-Disposition"] = "attachment; filename=indicadores_sexo_educacao_municipio.csv"
+
+    return response
+
+@app.get("/distritos/", tags=['Dashboard Educação'], 
+        response_class=StreamingResponse)
+def distritos(db: Session = Depends(get_db)):
+
+    io = dao.distritos(db)
+
+    response = StreamingResponse(iter([io.getvalue()]),
+                            media_type="text/csv"
+       )
+    
+    response.headers["Content-Disposition"] = "attachment; filename=distritos.csv"
 
     return response
