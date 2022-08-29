@@ -15,7 +15,7 @@ app = FastAPI(openapi_url="/",
     title="OBSERVASAMPA",
     description=description,
     version="0.0.1",
-    terms_of_service="http://example.com/terms/",
+    #terms_of_service="http://example.com/terms/",
     contact={
         "name": "SEPEP",
         "url": "https://www.prefeitura.sp.gov.br/cidade/secretarias/governo/planejamento/",
