@@ -76,3 +76,11 @@ def list_periodos(db: Session, skip: int = 0, limit: int = 100):
     query = query.offset(skip).limit(limit)
 
     return query.all()
+
+def periodos_indicador(db: Session, cd_indicador: int):
+
+    resultados = resultados_indicador(db = db, cd_indicador=cd_indicador)
+
+    periodos = list(set([r.periodo for r in resultados]))
+
+    return periodos

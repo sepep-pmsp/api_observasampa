@@ -76,3 +76,14 @@ def list_periodos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)
 
     periodos = basicdao.list_periodos(db, skip=skip, limit=limit)
     return periodos
+
+@app.get("/periodos/{cd_indicador}", response_model=List[basicschemas.Periodo], tags=['Períodos', 'Indicadores'])
+def list_periodos_indicador(cd_indicador: int, db: Session = Depends(get_db)):
+
+    indicador = basicdao.get_indicador(db=db, cd_indicador = cd_indicador)
+
+    if indicador is None:
+        raise HTTPException(status_code=404, detail='Indicador não existente')
+
+    periodos = basicdao.periodos_indicador(db, cd_indicador=indicador.cd_indicador)
+    return periodos
