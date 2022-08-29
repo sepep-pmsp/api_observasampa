@@ -56,7 +56,7 @@ def list_niveis(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return niveis
 
 @app.get("/regioes/", response_model=List[basicschemas.Regiao], tags=['Regiões'])
-def list_regioes(cd_nivel_regiao: int = None, db: Session = Depends(get_db)):
+def list_regioes(cd_nivel_regiao: int = None, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 
     if cd_nivel_regiao:
         nivel = basicdao.get_nivel_regiao(db, cd_nivel_regiao = cd_nivel_regiao)
