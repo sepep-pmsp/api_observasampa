@@ -24,7 +24,8 @@ def get_db():
         db.close()
 
 
-@app.get("/indicadores_sexo_educacao_municipio/", tags=['Dashboard Educação'])
+@app.get("/indicadores_sexo_educacao_municipio/", tags=['Dashboard Educação'], 
+        response_class=StreamingResponse)
 def indicadores_sexo_educacao_municipio(db: Session = Depends(get_db)):
 
     io = dao.indicadores_sexo_educacao_municipio(db)
