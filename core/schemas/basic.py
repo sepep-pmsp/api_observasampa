@@ -39,7 +39,7 @@ class Regiao(OrmBase):
     cd_regiao : int
     sg_regiao : str
     nm_regiao : str
-    nivel : NivelRegiao
+    cd_nivel_regiao : str
 
 
 class Periodo(OrmBase):

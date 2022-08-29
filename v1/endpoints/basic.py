@@ -49,26 +49,26 @@ def read_resultados_indicador(cd_indicador: int, db: Session = Depends(get_db)):
     return resultados
 
 
-@app.get("/regioes/", response_model=List[basicschemas.Regiao], tags=['Regiões'])
-def list_regioes(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
-
-    regioes = basicdao.list_regioes(db, skip=skip, limit=limit)
-    return regioes
-
 @app.get("/regioes/niveis/", response_model=List[basicschemas.NivelRegiao], tags=['Regiões'])
 def list_niveis(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 
     niveis = basicdao.list_niveis_regioes(db, skip=skip, limit=limit)
     return niveis
 
-@app.get("/regioes/{nivel}/", response_model=List[basicschemas.Regiao], tags=['Regiões'])
-def list_regioes_nivel(cd_nivel_regiao: int, db: Session = Depends(get_db)):
+@app.get("/regioes/", response_model=List[basicschemas.Regiao], tags=['Regiões'])
+def list_regioes(cd_nivel_regiao: int = None, db: Session = Depends(get_db)):
 
-    nivel = basicdao.get_nivel_regiao(db, cd_nivel_regiao = cd_nivel_regiao)
-    if nivel is None:
-        raise HTTPException(status_code=404, detail='Nivel não existente')
-    regioes = basicdao.list_regioes_nivel(db, cd_nivel_regiao = nivel.cd_nivel_regiao)
+    if cd_nivel_regiao:
+        nivel = basicdao.get_nivel_regiao(db, cd_nivel_regiao = cd_nivel_regiao)
+        if nivel is None:
+            raise HTTPException(status_code=404, detail='Nivel não existente')
+        regioes = basicdao.list_regioes_nivel(db, cd_nivel_regiao = nivel.cd_nivel_regiao)
+        return regioes
+
+    regioes = basicdao.list_regioes(db, skip=skip, limit=limit)
     return regioes
+
+
  
 
 @app.get("/periodos/", response_model=List[basicschemas.Periodo], tags=['Períodos'])
