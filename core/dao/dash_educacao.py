@@ -98,5 +98,48 @@ def distritos(db: Session):
     return io
 
 
+def indicadores_educacao_distritos(db: Session):
+
+    indicadores = {
+        '60' : 'Demanda Atendida de Vagas em Creches', 
+        '58' : 'Alunos do Ensino Fundamental que utilizam Transporte Escolar Gratuito', 
+        '89' : 'Taxa de abandono escolar no Ensino Fundamental', 
+        '84' : 'Taxa de distorção idade-série no Ensino Fundamental', 
+        '94' : 'Taxa de repetência dos alunos no Ensino Fundamental', 
+        '55' : 'Alunos da raça/cor preta'
+                    }
+
+    data = {}
+
+    for cd_indi, indi_nome in indicadores.items():
+
+        results = resultados_indicador(db, cd_indi)
+        results = resultados_por_nivel(results, 'Distrito')
+        results = [
+                    (r.periodo.vl_periodo, r.vl_indicador_resultado, r.regiao.nm_regiao)
+                    for r in results
+                        ]
+        data[indi_nome] = pd.DataFrame(results, columns = ('Periodo', indi_nome, 'Distrito'))
+
+    del results
+    
+    
+    indicadores = list(data.keys())
+    pivot = data[indicadores.pop()]
+
+    for indi in indicadores:
+        pivot = pd.merge(pivot, data[indi], 
+                on = ['Periodo', 'Distrito'], how='outer')
+    del data
+    pivot.fillna(0, inplace=True)
+    pivot.reset_index(drop=True, inplace=True)
+    pivot.sort_values(by=['Periodo', 'Distrito'], inplace=True)
+
+    io = StringIO()
+
+    pivot.to_csv(io, index=False,  sep=';', decimal=',', encoding='utf-8')
+
+    return io
+
 
 
