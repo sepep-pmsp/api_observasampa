@@ -183,3 +183,30 @@ def indicadores_educacao_municipio(db: Session):
     pivot.to_csv(io, index=False,  sep=';', decimal=',', encoding='utf-8')
 
     return io
+
+def periodos(db: Session):
+
+    indicadores = [
+        '48', '49', '50', '52', 
+        '55', '27', '28', '58', 
+        '68', '44', '72', '89', 
+        '84', '94', '29', '60', 
+        '83']
+
+    periodos = set(())
+    for cd_indi in indicadores:
+
+        results = resultados_indicador(db, cd_indi)
+        results = set([r.periodo.vl_periodo for r in results])
+        periodos.update(results)
+
+    periodos = pd.Series(list(periodos))
+    df = pd.DataFrame(periodos, columns=['Periodo'])
+    df['Periodo'] = df['Periodo'].astype(int)
+    df.sort_values(by='Periodo', inplace=True)
+    
+    io = StringIO()
+
+    df.to_csv(io, index=False,  sep=';', decimal=',', encoding='utf-8')
+
+    return io
