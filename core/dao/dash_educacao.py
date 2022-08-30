@@ -210,3 +210,34 @@ def periodos(db: Session):
     df.to_csv(io, index=False,  sep=';', decimal=',', encoding='utf-8')
 
     return io
+
+def indicadores_raca_cor_educacao_municipio(db: Session):
+
+    indicadores = {
+        'Amarela' : '48',
+        'Indígena' : '50',
+        'Branca' : '49',
+        'Parda' : '52',
+        'Preta' : '55'
+    }
+
+    dados = []
+    for indi_nome, ind_cod in indicadores.items():
+        res = resultados_indicador(db, ind_cod)
+        res = resultados_por_nivel(res, 'Município')
+        res = [(periodo_resultado(r), indi_nome, valor_resultado(r))
+                for r in res]
+        dados.extend(res)
+
+
+    io = StringIO()
+
+    df = pd.DataFrame(dados, columns = ['Periodo', 'Raça/cor','Percentual de alunos'])
+    df['Periodo'] = df['Periodo'].astype(int)
+    df['Percentual de alunos'] = df['Percentual de alunos'].astype(float)
+
+    df = df.sort_values(by='Periodo')
+
+    df.to_csv(io, index=False,  sep=';', decimal=',', encoding='utf-8')
+
+    return io

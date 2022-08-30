@@ -93,3 +93,17 @@ def periodos(db: Session = Depends(get_db)):
     response.headers["Content-Disposition"] = "attachment; filename=periodos.csv"
 
     return response
+
+@app.get("/indicadores_raca_cor_educacao_municipio/", tags=['Dashboard Educação'], 
+        response_class=StreamingResponse)
+def indicadores_raca_cor_educacao_municipio(db: Session = Depends(get_db)):
+
+    io = dao.indicadores_raca_cor_educacao_municipio(db)
+
+    response = StreamingResponse(iter([io.getvalue()]),
+                            media_type="text/csv"
+       )
+    
+    response.headers["Content-Disposition"] = "attachment; filename=indicadores_raca_cor_educacao_municipio.csv"
+
+    return response
