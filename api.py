@@ -7,8 +7,6 @@ description = """
 ## API para o OBSERVA**SAMPA**.
 
 Desenvolvimento interno - time de **tecnologia de SEPEP** 🚀
-
-Em parceria com PRODAM.
 """
 
 app = FastAPI(openapi_url="/",
