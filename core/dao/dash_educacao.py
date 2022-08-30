@@ -141,5 +141,45 @@ def indicadores_educacao_distritos(db: Session):
 
     return io
 
+def indicadores_educacao_municipio(db: Session):
 
+    indicadores = {
+        '83' : 'Taxa de Analfabetismo',
+        '68' : 'Nota IDEB anos finais ciclo II',
+        '44' : 'Nota IDEB anos iniciais ciclo I',
+        '72' : 'Professores com ensino superior completo',
+        '29' : 'Taxa de Universalização da Educação Básica obrigatória',
+        '55' : 'Alunos da raça/cor preta',
+    }
 
+    data = {}
+
+    for cd_indi, indi_nome in indicadores.items():
+
+        results = resultados_indicador(db, cd_indi)
+        results = resultados_por_nivel(results, 'Município')
+        results = [
+                    (r.periodo.vl_periodo, r.vl_indicador_resultado)
+                    for r in results
+                        ]
+        data[indi_nome] = pd.DataFrame(results, columns = ('Periodo', indi_nome))
+
+    del results
+        
+
+    indicadores = list(data.keys())
+    pivot = data[indicadores.pop()]
+
+    for indi in indicadores:
+        pivot = pd.merge(pivot, data[indi], 
+                on = 'Periodo', how='outer')
+    del data
+    pivot.fillna(0, inplace=True)
+    pivot.reset_index(drop=True, inplace=True)
+    pivot.sort_values(by='Periodo', inplace=True)
+
+    io = StringIO()
+
+    pivot.to_csv(io, index=False,  sep=';', decimal=',', encoding='utf-8')
+
+    return io
