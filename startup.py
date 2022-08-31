@@ -4,6 +4,8 @@ def build_config_template():
 
     code = '''
 
+from core.utils.utils import build_conn_str
+
 db_data = {
 'host': '',
 'port': '',
