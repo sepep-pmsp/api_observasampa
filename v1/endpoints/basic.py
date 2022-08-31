@@ -37,7 +37,7 @@ def read_indicador_detail(cd_indicador: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail=f"Indicador {cd_indicador} Não Encontrado")
     return indicador
 
-@app.get("/indicadores/{cd_indicador}/resultados", response_model=List[basicschemas.ResultadoIndicador],  tags=['Indicadores', 'Resultados'])
+@app.get("/indicadores/{cd_indicador}/resultados", response_model=List[basicschemas.ResultadoIndicador],  tags=['Indicadores'])
 def read_resultados_indicador(cd_indicador: int, db: Session = Depends(get_db)):
 
     indicador = basicdao.get_indicador(db, cd_indicador=cd_indicador)
@@ -94,10 +94,21 @@ def read_variaveis(skip: int = 0, limit: int = 100, db: Session = Depends(get_db
     variaveis = basicdao.list_variaveis(db, skip=skip, limit=limit)
     return variaveis
 
-@app.get("/variaveis/{cd_variavel}", response_model=basicschemas.VariavelReport,  tags=['Variaveis'])
-def read_variavel_detail(cd_variavel: int, db: Session = Depends(get_db)):
+@app.get("/variaveis/{nm_resumido_variavel}", response_model=basicschemas.VariavelReport,  tags=['Variaveis'])
+def read_variavel_detail(nm_resumido_variavel: str, db: Session = Depends(get_db)):
 
-    variavel = basicdao.get_variavel(db, cd_variavel=cd_variavel)
+    variavel = basicdao.get_variavel(db, nm_resumido_variavel=nm_resumido_variavel)
+    if variavel is None:
+        raise HTTPException(status_code=404, detail=f"Variavel {nm_resumido_variavel} Não Encontrada")
+    return variavel
+
+@app.get("/variaveis/{nm_resumido_variavel}/resultados", response_model=List[basicschemas.ResultadoVariavel],  tags=['Variaveis'])
+def read_resultados_indicador(nm_resumido_variavel: str, skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+
+    variavel = basicdao.get_variavel(db, nm_resumido_variavel=nm_resumido_variavel)
     if variavel is None:
         raise HTTPException(status_code=404, detail=f"Variavel {cd_variavel} Não Encontrada")
-    return variavel
+
+    resultados = basicdao.resultados_variavel(db, nm_resumido_variavel=variavel.nm_resumido_variavel, skip=skip, limit=limit)
+    
+    return resultados

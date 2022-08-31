@@ -95,11 +95,22 @@ def list_variaveis(db: Session, skip: int = 0, limit: int = 100):
 
     return query.all()
 
-def get_variavel(db: Session, cd_variavel: int):
+def get_variavel(db: Session, nm_resumido_variavel: str):
 
     model = basicmodels.Variavel
     query = db.query(model)
     query = query.filter(model.cd_tipo_situacao==1)
-    query = query.filter(model.cd_variavel==cd_variavel)
+    query = query.filter(model.nm_resumido_variavel==nm_resumido_variavel)
 
     return query.first()
+
+def resultados_variavel(db: Session, nm_resumido_variavel: str, skip: int = 0, limit: int = 100):
+
+    variavel = get_variavel(db, nm_resumido_variavel=nm_resumido_variavel)
+    model = basicmodels.ResultadoVariavel
+    query = db.query(model)
+    query = query.filter(model.cd_tipo_situacao==1)
+    query = query.filter(model.cd_variavel==variavel.cd_variavel)
+    query = query.offset(skip).limit(limit)
+    
+    return query.all()

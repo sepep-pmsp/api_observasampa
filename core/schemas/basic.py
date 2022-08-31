@@ -83,12 +83,12 @@ class VariavelReport(VariavelBase):
 
 class ResultadoVariavel(OrmBase):
 
-    cd_sequencia_variavel_resultado = int
-    cd_periodo = int
-    cd_variavel = int
-    variavel = VariavelBase
-    cd_regiao = int
-    regiao = Regiao
-    vl_variavel_resultado = str
+    cd_sequencia_variavel_resultado : int
+    cd_periodo : int
+    cd_variavel : int
+    variavel : VariavelBase
+    cd_regiao : int
+    regiao : Regiao
+    vl_variavel_resultado : str
 
 
