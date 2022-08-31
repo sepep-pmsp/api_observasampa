@@ -30,11 +30,11 @@ def read_indicadores(skip: int = 0, limit: int = 100, db: Session = Depends(get_
     return indicadores
 
 @app.get("/indicadores/{cd_indicador}", response_model=basicschemas.IndicadorReport,  tags=['Indicadores'])
-def read_indicador(cd_indicador: int, db: Session = Depends(get_db)):
+def read_indicador_detail(cd_indicador: int, db: Session = Depends(get_db)):
 
     indicador = basicdao.get_indicador(db, cd_indicador=cd_indicador)
     if indicador is None:
-        raise HTTPException(status_code=404, detail="Indicador Não Encontrado")
+        raise HTTPException(status_code=404, detail=f"Indicador {cd_indicador} Não Encontrado")
     return indicador
 
 @app.get("/indicadores/{cd_indicador}/resultados", response_model=List[basicschemas.ResultadoIndicador],  tags=['Indicadores', 'Resultados'])
@@ -42,7 +42,7 @@ def read_resultados_indicador(cd_indicador: int, db: Session = Depends(get_db)):
 
     indicador = basicdao.get_indicador(db, cd_indicador=cd_indicador)
     if indicador is None:
-        raise HTTPException(status_code=404, detail="Indicador Não Encontrado")
+        raise HTTPException(status_code=404, detail=f"Indicador {cd_indicador} Não Encontrado")
 
     resultados = basicdao.resultados_indicador(db, cd_indicador=indicador.cd_indicador)
     
@@ -61,7 +61,7 @@ def list_regioes(cd_nivel_regiao: int = None, skip: int = 0, limit: int = 100, d
     if cd_nivel_regiao:
         nivel = basicdao.get_nivel_regiao(db, cd_nivel_regiao = cd_nivel_regiao)
         if nivel is None:
-            raise HTTPException(status_code=404, detail='Nivel não existente')
+            raise HTTPException(status_code=404, detail=f'Nivel {cd_nivel_regiao} não existente')
         regioes = basicdao.list_regioes_nivel(db, cd_nivel_regiao = nivel.cd_nivel_regiao)
         return regioes
 
@@ -83,7 +83,21 @@ def list_periodos_indicador(cd_indicador: int, db: Session = Depends(get_db)):
     indicador = basicdao.get_indicador(db=db, cd_indicador = cd_indicador)
 
     if indicador is None:
-        raise HTTPException(status_code=404, detail='Indicador não existente')
+        raise HTTPException(status_code=404, detail=f'Indicador {cd_indicador} não existente')
 
     periodos = basicdao.periodos_indicador(db, cd_indicador=indicador.cd_indicador)
     return periodos
+
+@app.get("/variaveis/", response_model=List[basicschemas.VariavelBase], tags=['Variaveis'])
+def read_variaveis(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+
+    variaveis = basicdao.list_variaveis(db, skip=skip, limit=limit)
+    return variaveis
+
+@app.get("/variaveis/{cd_variavel}", response_model=basicschemas.VariavelReport,  tags=['Variaveis'])
+def read_variavel_detail(cd_variavel: int, db: Session = Depends(get_db)):
+
+    variavel = basicdao.get_variavel(db, cd_variavel=cd_variavel)
+    if variavel is None:
+        raise HTTPException(status_code=404, detail=f"Variavel {cd_variavel} Não Encontrada")
+    return variavel

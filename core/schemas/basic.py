@@ -69,4 +69,26 @@ class RegiaoResultado(Regiao):
 
     resultados : List[ResultadoIndicador] = []
 
+class VariavelBase(OrmBase):
+
+    cd_variavel : int
+    nm_resumido_variavel : Union[str, None] = None
+
+class VariavelReport(VariavelBase):
+    
+    nm_completo_variavel : Union[str, None] = None
+    dc_serie_historica : Union[str, None] = None
+    tx_fonte_variavel : Union[str, None] = None
+    dc_nota_tecnica : Union[str, None] = None
+
+class ResultadoVariavel(OrmBase):
+
+    cd_sequencia_variavel_resultado = int
+    cd_periodo = int
+    cd_variavel = int
+    variavel = VariavelBase
+    cd_regiao = int
+    regiao = Regiao
+    vl_variavel_resultado = str
+
 

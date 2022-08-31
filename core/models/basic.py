@@ -74,5 +74,36 @@ class ResultadoIndicador(Base):
     cd_tipo_situacao = Column(Integer)
 
 
+class Variavel(Base):
+
+    __tablename__ = 'variavel'
+    metadata = metadata
+
+    cd_variavel = Column(Integer, index=True, primary_key=True)
+    nm_resumido_variavel = Column(String)
+    nm_completo_variavel = Column(String)
+    dc_serie_historica = Column(String)
+    tx_fonte_variavel = Column(String)
+    dc_nota_tecnica = Column(String)
+    resultados = relationship("ResultadoVariavel", back_populates="variavel")
+
+    cd_tipo_situacao = Column(Integer)
+
+class ResultadoVariavel(Base):
+
+    __tablename__ = 'variavel_resultado'
+    metadata = metadata
+
+    cd_sequencia_variavel_resultado = Column(Integer, index=True, primary_key=True)
+    cd_periodo = Column(Integer, ForeignKey("periodo.cd_periodo"))
+    cd_variavel = Column(Integer, ForeignKey("variavel.cd_variavel"))
+    variavel = relationship("Variavel", back_populates="resultados")
+    cd_regiao = Column(Integer, ForeignKey("regiao.cd_regiao"))
+    regiao = relationship("Regiao")
+    vl_variavel_resultado = Column(String)
+
+    cd_tipo_situacao = Column(Integer)
+
+
     
 

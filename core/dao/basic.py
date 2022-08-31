@@ -84,3 +84,22 @@ def periodos_indicador(db: Session, cd_indicador: int):
     periodos = list(set([r.periodo for r in resultados]))
 
     return periodos
+
+def list_variaveis(db: Session, skip: int = 0, limit: int = 100):
+
+    model = basicmodels.Variavel
+    query = db.query(model)
+    query = query.filter(model.cd_tipo_situacao==1)
+    query = query.offset(skip).limit(limit)
+
+
+    return query.all()
+
+def get_variavel(db: Session, cd_variavel: int):
+
+    model = basicmodels.Variavel
+    query = db.query(model)
+    query = query.filter(model.cd_tipo_situacao==1)
+    query = query.filter(model.cd_variavel==cd_variavel)
+
+    return query.first()
