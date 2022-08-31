@@ -107,3 +107,17 @@ def indicadores_raca_cor_educacao_municipio(db: Session = Depends(get_db)):
     response.headers["Content-Disposition"] = "attachment; filename=indicadores_raca_cor_educacao_municipio.csv"
 
     return response
+
+@app.get("/demanda_de_creches/", tags=['Dashboard Educação'], 
+        response_class=StreamingResponse)
+def demanda_de_creches(db: Session = Depends(get_db)):
+
+    io = dao.demanda_de_creches(db)
+
+    response = StreamingResponse(iter([io.getvalue()]),
+                            media_type="text/csv"
+       )
+    
+    response.headers["Content-Disposition"] = "attachment; filename=demanda_de_creches.csv"
+
+    return response

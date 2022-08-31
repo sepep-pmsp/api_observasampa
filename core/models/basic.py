@@ -96,7 +96,7 @@ class ResultadoVariavel(Base):
 
     cd_sequencia_variavel_resultado = Column(Integer, index=True, primary_key=True)
     cd_periodo = Column(Integer, ForeignKey("periodo.cd_periodo"))
-    regiao = relationship("Periodo")
+    periodo = relationship("Periodo")
     cd_variavel = Column(Integer, ForeignKey("variavel.cd_variavel"))
     variavel = relationship("Variavel", back_populates="resultados")
     cd_regiao = Column(Integer, ForeignKey("regiao.cd_regiao"))

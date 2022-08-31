@@ -2,8 +2,9 @@ from sqlalchemy.orm import Session
 
 from ..models import basic as basicmodels
 from ..utils.utils import remover_acentos
-from .basic import resultados_indicador, list_regioes_nivel
-from .filtros import resultados_por_nivel, periodo_resultado, valor_resultado
+from .basic import resultados_indicador, list_regioes_nivel, resultados_variavel
+from .filtros import (resultados_por_nivel, periodo_resultado, valor_resultado, 
+    regiao_resultado, nivel_regiao_resultado, valor_resultado_var)
 
 import pandas as pd
 from io import StringIO
@@ -241,3 +242,26 @@ def indicadores_raca_cor_educacao_municipio(db: Session):
     df.to_csv(io, index=False,  sep=';', decimal=',', encoding='utf-8')
 
     return io
+
+def demanda_de_creches(db: Session):
+
+
+    demanda = resultados_variavel(db, 'V0048')
+    demanda = [(periodo_resultado(r), regiao_resultado(r), nivel_regiao_resultado(r), valor_resultado_var(r))
+            for r in demanda]
+    demanda = pd.DataFrame(demanda, columns = ['Periodo', 'Regiao', 'Estrutura da Cidade', 'Demanda de creche'])
+
+    matriculas = resultados_variavel(db, 'V0050')
+    matriculas = [(periodo_resultado(r), regiao_resultado(r), nivel_regiao_resultado(r), valor_resultado_var(r))
+            for r in matriculas]
+    matriculas = pd.DataFrame(matriculas, columns = ['Periodo', 'Regiao', 'Estrutura da Cidade', 'Matrículas nas creches'])
+
+    df = pd.merge(demanda, matriculas, on = ['Periodo', 'Regiao', 'Estrutura da Cidade'], how='outer')
+    df = df.sort_values(by=['Periodo', 'Estrutura da Cidade'])
+
+    io = StringIO()
+
+    df.to_csv(io, index=False,  sep=';', decimal=',', encoding='utf-8')
+
+    return io
+

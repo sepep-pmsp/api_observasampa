@@ -17,7 +17,19 @@ def periodo_resultado(r):
 
     return r.periodo.vl_periodo
 
+def regiao_resultado(r):
+
+    return r.regiao.nm_regiao
+
 def valor_resultado(r):
 
     return r.vl_indicador_resultado
+
+def valor_resultado_var(r):
+
+    return r.vl_variavel_resultado
+
+def nivel_regiao_resultado(r):
+
+    return r.regiao.nivel.dc_nivel_regiao
 
