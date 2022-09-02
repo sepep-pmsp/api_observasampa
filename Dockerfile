@@ -1,13 +1,17 @@
+# 
 FROM python:3.9
-FROM ubuntu:12.04
 
-RUN apt-get update && \
-      apt-get -y install sudo
+# 
+WORKDIR /code
 
-RUN useradd -m docker && echo "docker:docker" | chpasswd && adduser docker sudo
+# 
+COPY ./requirements.txt /code/requirements.txt
 
-USER docker
+# 
+RUN pip install --no-cache-dir --upgrade -r /code/requirements.txt
 
-CMD ["sudo", "start_server.sh"]
+# 
+COPY ./ /code/app
 
-
+# 
+CMD ["uvicorn", "app.api:app", "--host", "0.0.0.0", "--port", "80"]
