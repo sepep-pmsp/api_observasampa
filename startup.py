@@ -10,17 +10,17 @@ def create_code(host, port, db, user, passw):
 
     code = f'''
 
-    from core.utils.utils import build_conn_str
+from core.utils.utils import build_conn_str
 
-    db_data = {{
-    'host': '{host}',
-    'port': '{port}',
-    'database': '{db}',
-    'user': '{user}',
-    'password': '{passw}'
-    }}
+db_data = {{
+'host': '{host}',
+'port': '{port}',
+'database': '{db}',
+'user': '{user}',
+'password': '{passw}'
+}}
 
-    SQLALCHEMY_DATABASE_URL = build_conn_str(**db_data)
+SQLALCHEMY_DATABASE_URL = build_conn_str(**db_data)
 
         '''
 
