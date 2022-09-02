@@ -24,6 +24,6 @@ app = FastAPI(openapi_url="/",
         "url": "https://www.gnu.org/licenses/agpl-3.0.en.html",
     },
     )
-app.include_router(basic_app, prefix="/basic")
-app.include_router(dash_educacao, prefix="/dashboards/educacao")
+app.include_router(basic_app, prefix="/v1/basic")
+app.include_router(dash_educacao, prefix="/v1/dashboards/educacao")
 
