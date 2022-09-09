@@ -1,4 +1,4 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 
 from typing import List
 
@@ -6,6 +6,7 @@ from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from core.dao import basic as basicdao
+from core.dao import filtros
 from core.models import basic as basicmodels
 from core.schemas import basic as basicschemas
 from core.models.database import SessionLocal, engine
@@ -14,7 +15,6 @@ basicmodels.Base.metadata.create_all(bind=engine)
 
 app = APIRouter()
 
-
 # Dependency
 def get_db():
     db = SessionLocal()
@@ -22,6 +22,9 @@ def get_db():
         yield db
     finally:
         db.close()
+
+NIVEIS_REGIOES = filtros.nomes_niveis()
+
 
 @app.get("/indicadores/", response_model=List[basicschemas.IndicadorBase], tags=['Indicadores'])
 def read_indicadores(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
@@ -38,11 +41,19 @@ def read_indicador_detail(cd_indicador: int, db: Session = Depends(get_db)):
     return indicador
 
 @app.get("/indicadores/{cd_indicador}/resultados", response_model=List[basicschemas.ResultadoIndicador],  tags=['Indicadores'])
-def read_resultados_indicador(cd_indicador: int, db: Session = Depends(get_db)):
+def read_resultados_indicador(cd_indicador: int, nivel_regional : str = Query(None, enum=NIVEIS_REGIOES),
+                        db: Session = Depends(get_db)):
 
     indicador = basicdao.get_indicador(db, cd_indicador=cd_indicador)
     if indicador is None:
         raise HTTPException(status_code=404, detail=f"Indicador {cd_indicador} Não Encontrado")
+
+    if nivel_regional:
+        nivel = basicdao.get_nivel_regiao_sg(db, sg_nivel_regiao=nivel_regional)
+        resultados = basicdao.resultados_indicador_nivel_regiao(db, cd_indicador=indicador.cd_indicador,
+                                                                cd_nivel_regiao=nivel.cd_nivel_regiao)
+
+        return resultados
 
     resultados = basicdao.resultados_indicador(db, cd_indicador=indicador.cd_indicador)
     
@@ -50,9 +61,9 @@ def read_resultados_indicador(cd_indicador: int, db: Session = Depends(get_db)):
 
 
 @app.get("/regioes/niveis/", response_model=List[basicschemas.NivelRegiao], tags=['Regiões'])
-def list_niveis(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def list_niveis(db: Session = Depends(get_db)):
 
-    niveis = basicdao.list_niveis_regioes(db, skip=skip, limit=limit)
+    niveis = basicdao.list_niveis_regioes(db)
     return niveis
 
 @app.get("/regioes/", response_model=List[basicschemas.Regiao], tags=['Regiões'])
