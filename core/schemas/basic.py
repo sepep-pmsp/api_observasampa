@@ -3,6 +3,7 @@ from typing import List, Union
 from pydantic import BaseModel, validator
 from sqlalchemy.orm import Query
 
+from .transformacoes import padrao_nome_regiao
 
 class OrmBase(BaseModel):
     
@@ -41,6 +42,11 @@ class Regiao(OrmBase):
     nm_regiao : str
     cd_nivel_regiao : str
 
+    @validator('nm_regiao', pre=True)
+    def split_str(cls, v):
+        if isinstance(v, str):
+            return padrao_nome_regiao(v)
+        return v
 
 class Periodo(OrmBase):
 
