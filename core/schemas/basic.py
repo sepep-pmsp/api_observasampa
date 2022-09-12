@@ -11,12 +11,20 @@ class OrmBase(BaseModel):
         orm_mode = True
 
 
+class TemaSimples(OrmBase):
+
+    cd_tema : int
+    nm_tema :  Union[str, None] = None
+    dc_tema :  Union[str, None] = None
 
 class IndicadorBase(OrmBase):
 
     cd_indicador : int
     nm_indicador : str
 
+class TemaReport(TemaSimples):
+
+    indicadores : List[IndicadorBase] = []
 
 class IndicadorReport(IndicadorBase):
 
@@ -26,6 +34,7 @@ class IndicadorReport(IndicadorBase):
     dc_periodicidade_indicador : Union[str, None] = None
     tx_fonte_indicador : Union[str, None] = None
     in_visibilidade : bool
+    temas : List[TemaSimples] = []
 
 
 class NivelRegiao(OrmBase):

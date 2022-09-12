@@ -1,7 +1,28 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Table
 from sqlalchemy.orm import relationship
 
 from .database import Base, metadata
+
+association_table = Table(
+    "indicador_tema",
+    metadata,
+    Column("cd_tema", ForeignKey("tema.cd_tema")),
+    Column("cd_indicador", ForeignKey("indicador.cd_indicador")),
+    Column('cd_tipo_situacao', String)
+)
+
+class Tema(Base):
+    __tablename__ = "tema"
+    metadata = metadata
+
+    cd_tema = Column(Integer, primary_key=True)
+    nm_tema = Column(String)
+    dc_tema = Column(String)
+    aq_icone_tema = Column(String)
+    indicadores = relationship("Indicador", secondary=association_table, back_populates="temas")
+    
+
+    cd_tipo_situacao = Column(Integer)
 
 
 class Indicador(Base):
@@ -17,6 +38,7 @@ class Indicador(Base):
     tx_fonte_indicador = Column(String)
     in_visibilidade = Column(Boolean)
     resultados = relationship("ResultadoIndicador")
+    temas = relationship("Tema", secondary=association_table)
 
     cd_tipo_situacao = Column(Integer)
 
