@@ -1,6 +1,6 @@
-from typing import List, Union
+from typing import List, Union, Optional
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, validator 
 from sqlalchemy.orm import Query
 
 from .transformacoes import padrao_nome_regiao
@@ -50,12 +50,13 @@ class Regiao(OrmBase):
     sg_regiao : str
     nm_regiao : str
     cd_nivel_regiao : str
+    nm_regiao_padrao : Optional[str] = None
 
-    @validator('nm_regiao', pre=True)
-    def split_str(cls, v):
-        if isinstance(v, str):
-            return padrao_nome_regiao(v)
-        return v
+    @validator('nm_regiao_padrao', always=True)
+    def ab(cls, v, values) -> str:
+        return padrao_nome_regiao(values['nm_regiao'])
+
+        
 
 class Periodo(OrmBase):
 
