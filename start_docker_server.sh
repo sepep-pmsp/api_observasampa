@@ -4,7 +4,7 @@ sudo docker stop $(docker ps -a -q)
 sudo docker rm $(docker ps -a -q)
 
 #pull new commits
-sudo git pull
+git pull
 
 #build image
 sudo docker build -t api_observa .
