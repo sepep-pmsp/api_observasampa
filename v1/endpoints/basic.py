@@ -131,12 +131,20 @@ def read_variavel_detail(nm_resumido_variavel: str, db: Session = Depends(get_db
     return variavel
 
 @app.get("/variaveis/{nm_resumido_variavel}/resultados", response_model=List[basicschemas.ResultadoVariavel],  tags=['Variaveis'])
-def read_resultados_indicador(nm_resumido_variavel: str, skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
+def read_resultados_indicador(nm_resumido_variavel: str,  nivel_regional : str = Query(None, enum=NIVEIS_REGIOES),
+                             db: Session = Depends(get_db)):
 
     variavel = basicdao.get_variavel(db, nm_resumido_variavel=nm_resumido_variavel)
     if variavel is None:
         raise HTTPException(status_code=404, detail=f"Variavel {cd_variavel} Não Encontrada")
+    
+    if nivel_regional:
+        nivel = basicdao.get_nivel_regiao_sg(db, sg_nivel_regiao=nivel_regional)
+        resultados = basicdao.resultados_variavel_nivel_regiao(db, nm_resumido_variavel=variavel.nm_resumido_variavel,
+                                                                cd_nivel_regiao=nivel.cd_nivel_regiao)
 
-    resultados = basicdao.resultados_variavel(db, nm_resumido_variavel=variavel.nm_resumido_variavel, skip=skip, limit=limit)
+        return resultados
+
+    resultados = basicdao.resultados_variavel(db, nm_resumido_variavel=variavel.nm_resumido_variavel)
     
     return resultados
