@@ -1,6 +1,6 @@
-from typing import List, Union
+from typing import List, Union, Optional
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, validator 
 from sqlalchemy.orm import Query
 
 from .transformacoes import padrao_nome_regiao
@@ -11,12 +11,20 @@ class OrmBase(BaseModel):
         orm_mode = True
 
 
+class TemaSimples(OrmBase):
+
+    cd_tema : int
+    nm_tema :  Union[str, None] = None
+    dc_tema :  Union[str, None] = None
 
 class IndicadorBase(OrmBase):
 
     cd_indicador : int
     nm_indicador : str
 
+class TemaReport(TemaSimples):
+
+    indicadores : List[IndicadorBase] = []
 
 class IndicadorReport(IndicadorBase):
 
@@ -26,6 +34,7 @@ class IndicadorReport(IndicadorBase):
     dc_periodicidade_indicador : Union[str, None] = None
     tx_fonte_indicador : Union[str, None] = None
     in_visibilidade : bool
+    temas : List[TemaSimples] = []
 
 
 class NivelRegiao(OrmBase):
@@ -41,12 +50,13 @@ class Regiao(OrmBase):
     sg_regiao : str
     nm_regiao : str
     cd_nivel_regiao : str
+    nm_regiao_padrao : Optional[str] = None
 
-    @validator('nm_regiao', pre=True)
-    def split_str(cls, v):
-        if isinstance(v, str):
-            return padrao_nome_regiao(v)
-        return v
+    @validator('nm_regiao_padrao', always=True)
+    def ab(cls, v, values) -> str:
+        return padrao_nome_regiao(values['nm_regiao'])
+
+        
 
 class Periodo(OrmBase):
 

@@ -24,6 +24,14 @@ def get_indicador(db: Session, cd_indicador: int):
 
     return query.first()
 
+def list_temas(db: Session):
+
+    model = basicmodels.Tema
+    query = db.query(model)
+    query = query.filter(model.cd_tipo_situacao==1)
+
+    return query.all()
+
 def resultados_indicador(db: Session, cd_indicador: int):
 
     model = basicmodels.ResultadoIndicador
@@ -86,12 +94,11 @@ def list_regioes_nivel(db: Session, cd_nivel_regiao: int):
 
     return query.all()
 
-def list_periodos(db: Session, skip: int = 0, limit: int = 100):
+def list_periodos(db: Session):
 
     model = basicmodels.Periodo
     query = db.query(model)
     query = query.filter(model.cd_tipo_situacao==1)
-    query = query.offset(skip).limit(limit)
 
     return query.all()
 
