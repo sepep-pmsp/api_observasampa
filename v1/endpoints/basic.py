@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Query
 
-from typing import List
+from typing import List, Union
 
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -88,9 +88,20 @@ def list_regioes(cd_nivel_regiao: int = None, skip: int = 0, limit: int = 100, d
  
 
 @app.get("/periodos/", response_model=List[basicschemas.Periodo], tags=['Períodos'])
-def list_periodos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def list_periodos(lst_indicadores: Union[List[str], None] = Query(default=None),
+                db: Session = Depends(get_db)):
 
-    periodos = basicdao.list_periodos(db, skip=skip, limit=limit)
+    if lst_indicadores is not None:
+        periodos = set()
+        for cd_indicador in lst_indicadores:
+            indicador = basicdao.get_indicador(db=db, cd_indicador = cd_indicador)
+            if indicador is None:
+                raise HTTPException(status_code=404, detail=f'Indicador {cd_indicador} não existente')
+            periodos_ind = basicdao.periodos_indicador(db, cd_indicador=indicador.cd_indicador)
+            periodos.update(periodos_ind)
+            return periodos
+
+    periodos = basicdao.list_periodos(db)
     return periodos
 
 @app.get("/periodos/{cd_indicador}", response_model=List[basicschemas.Periodo], tags=['Períodos', 'Indicadores'])
