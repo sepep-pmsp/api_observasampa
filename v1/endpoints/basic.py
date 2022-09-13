@@ -100,7 +100,7 @@ def list_periodos(lst_indicadores: Union[List[str], None] = Query(default=None),
                 raise HTTPException(status_code=404, detail=f'Indicador {cd_indicador} não existente')
             periodos_ind = basicdao.periodos_indicador(db, cd_indicador=indicador.cd_indicador)
             periodos.update(periodos_ind)
-            return periodos
+        return periodos
 
     periodos = basicdao.list_periodos(db)
     return periodos
