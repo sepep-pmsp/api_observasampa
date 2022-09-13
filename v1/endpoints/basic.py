@@ -31,6 +31,7 @@ def read_indicadores(db: Session = Depends(get_db)):
     temas = basicdao.list_temas(db)
     return temas
 
+
 @app.get("/indicadores/", response_model=List[basicschemas.IndicadorBase], tags=['Indicadores'])
 def read_indicadores(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 
