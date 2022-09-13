@@ -129,14 +129,23 @@ def get_variavel(db: Session, nm_resumido_variavel: str):
 
     return query.first()
 
-def resultados_variavel(db: Session, nm_resumido_variavel: str, skip: int = None, limit: int = None):
+def resultados_variavel(db: Session, nm_resumido_variavel: str):
 
     variavel = get_variavel(db, nm_resumido_variavel=nm_resumido_variavel)
     model = basicmodels.ResultadoVariavel
     query = db.query(model)
     query = query.filter(model.cd_tipo_situacao==1)
     query = query.filter(model.cd_variavel==variavel.cd_variavel)
-    if skip and limit:
-        query = query.offset(skip).limit(limit)
 
     return query.all()
+
+def resultados_variavel_nivel_regiao(db: Session, nm_resumido_variavel: str, cd_nivel_regiao: int):
+
+    variavel = get_variavel(db, nm_resumido_variavel=nm_resumido_variavel)
+    model = basicmodels.ResultadoVariavel
+    query = db.query(model)
+    query = query.filter(model.cd_tipo_situacao==1)
+    query = query.filter(model.cd_variavel==variavel.cd_variavel)
+    r = query.all()
+
+    return resultados_por_nivel_cd(r, cd_nivel_regiao)
