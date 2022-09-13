@@ -136,7 +136,7 @@ def read_resultados_indicador(nm_resumido_variavel: str,  nivel_regional : str =
 
     variavel = basicdao.get_variavel(db, nm_resumido_variavel=nm_resumido_variavel)
     if variavel is None:
-        raise HTTPException(status_code=404, detail=f"Variavel {cd_variavel} Não Encontrada")
+        raise HTTPException(status_code=404, detail=f"Variavel {nm_resumido_variavel} Não Encontrada")
     
     if nivel_regional:
         nivel = basicdao.get_nivel_regiao_sg(db, sg_nivel_regiao=nivel_regional)
