@@ -63,6 +63,7 @@ class Regiao(Base):
     nm_regiao = Column(String)
     nivel = relationship("NivelRegiao", back_populates='regioes')
     resultados = relationship("ResultadoIndicador", back_populates="regiao")
+    resultados_variavel = relationship("ResultadoVariavel", back_populates='regiao')
 
     cd_tipo_situacao = Column(Integer)
 
@@ -74,6 +75,7 @@ class Periodo(Base):
     cd_periodo = Column(Integer, index=True, primary_key=True)
     vl_periodo = Column(String)
     resultados = relationship("ResultadoIndicador", back_populates="periodo")
+    resultados_variavel = relationship("ResultadoVariavel", back_populates="periodo")
 
     cd_tipo_situacao = Column(Integer)
 

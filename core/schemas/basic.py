@@ -101,6 +101,7 @@ class ResultadoVariavel(OrmBase):
 
     cd_sequencia_variavel_resultado : int
     cd_periodo : int
+    periodo : Periodo
     cd_variavel : int
     variavel : VariavelBase
     cd_regiao : int
