@@ -13,7 +13,7 @@ class ConteudoBase(OrmBase):
     cd_conteudo : int
     cd_tipo_conteudo : int
     tx_conteudo : Optional[str] = None
-    dt_atualizacao : str
+    #dt_atualizacao : str esta dando problema na validacao
 
 class TipoConteudo(OrmBase):
 
