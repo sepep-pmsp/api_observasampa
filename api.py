@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from v1 import basic_app, dash_educacao
+from v1 import basic_app, dash_educacao, front_end
 import uvicorn
 
 #pode colocar markdown
@@ -26,4 +26,6 @@ app = FastAPI(openapi_url="/",
     )
 app.include_router(basic_app, prefix="/v1/basic")
 app.include_router(dash_educacao, prefix="/v1/dashboards/educacao")
+app.include_router(front_end, prefix="/v1/front_end")
+
 
