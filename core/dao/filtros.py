@@ -1,6 +1,7 @@
 
 from core.models.database import SessionLocal
 import core.models.basic as basicmodels
+import core.models.front_end as front_end_models
 
 def get_db():
     db = SessionLocal()
@@ -58,3 +59,13 @@ def nomes_niveis():
     niveis = query.all()
 
     return [n.sg_nivel_regiao for n in niveis]
+
+def siglas_tipo_conteudo():
+
+    db_gen = get_db()
+    db = next(db_gen)
+    model = front_end_models.TipoConteudo
+    query = db.query(model)
+    tipos = query.all()
+
+    return [tipo.sg_tipo_conteudo for tipo in tipos]

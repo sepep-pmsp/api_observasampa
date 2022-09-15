@@ -1,7 +1,6 @@
 from typing import List, Union, Optional
 
 from pydantic import BaseModel, validator 
-from sqlalchemy.orm import Query
 
 from .transformacoes import padrao_nome_regiao
 
