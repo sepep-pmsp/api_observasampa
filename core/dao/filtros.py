@@ -3,6 +3,8 @@ from core.models.database import SessionLocal
 import core.models.basic as basicmodels
 import core.models.front_end as front_end_models
 
+from io import BytesIO
+
 def get_db():
     db = SessionLocal()
     try:
@@ -48,6 +50,23 @@ def valor_resultado_var(r):
 def nivel_regiao_resultado(r):
 
     return r.regiao.nivel.dc_nivel_regiao
+
+
+def image_conteudo(r):
+
+    #ESTA INVERTIDO NO BANCO KKK
+    img = r.aq_conteudo
+    io = BytesIO(img)
+
+    return io
+
+def arquivo_conteudo(r):
+
+    #MESMO DO ANTERIOR: INVERTERAM IMG E ARQUIVO
+    arq = r.aq_imagem_conteudo
+    io = BytesIO(arq)
+
+    return io
 
 
 def nomes_niveis():

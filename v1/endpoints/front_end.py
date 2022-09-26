@@ -5,12 +5,14 @@ from typing import List, Union
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 
+from fastapi.responses import StreamingResponse
+
 from core.dao import front_end as dao
 from core.models import front_end as models
 from core.schemas import front_end as schemas
 from core.models.database import SessionLocal, engine
 
-from core.dao.filtros import siglas_tipo_conteudo
+from core.dao.filtros import siglas_tipo_conteudo, arquivo_conteudo, image_conteudo
 
 
 app = APIRouter()
@@ -51,4 +53,47 @@ def get_conteudo(cd_conteudo : int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail=f"Conteudo {cd_conteudo} não Encontrado")
     
     return conteudo
+
+@app.get("/conteudos/{cd_conteudo}/imagem", tags=['Front-end'], 
+        response_class=StreamingResponse)
+def img_conteudo(cd_conteudo : int, db: Session = Depends(get_db)):
+
+
+    conteudo = dao.get_conteudo(db, cd_conteudo=cd_conteudo)
+    if conteudo is None:
+        raise HTTPException(status_code=404, detail=f"Conteudo {cd_conteudo} não Encontrado")
+    elif not conteudo.aq_conteudo:
+        raise HTTPException(status_code=404, detail=f"Conteudo {cd_conteudo} não possui imagem")
+
+    io = image_conteudo(conteudo)
+
+    response = StreamingResponse(iter([io.getvalue()]),
+                            media_type="image"
+       )
+    
+    response.headers["Content-Disposition"] = f"attachment; filename=conteudo_{conteudo.cd_conteudo}.img"
+
+    return response
+
+
+@app.get("/conteudos/{cd_conteudo}/arquivo", tags=['Front-end'], 
+        response_class=StreamingResponse)
+def arq_conteudo(cd_conteudo : int, db: Session = Depends(get_db)):
+
+
+    conteudo = dao.get_conteudo(db, cd_conteudo=cd_conteudo)
+    if conteudo is None:
+        raise HTTPException(status_code=404, detail=f"Conteudo {cd_conteudo} não Encontrado")
+    elif not conteudo.aq_imagem_conteudo:
+        raise HTTPException(status_code=404, detail=f"Conteudo {cd_conteudo} não possui arquivo")
+
+    io = arquivo_conteudo(conteudo)
+
+    response = StreamingResponse(iter([io.getvalue()]),
+                            media_type="PDF"
+       )
+    
+    response.headers["Content-Disposition"] = f"attachment; filename=conteudo_{conteudo.cd_conteudo}.pdf"
+
+    return response
 
