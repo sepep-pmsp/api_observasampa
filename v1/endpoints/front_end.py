@@ -35,13 +35,14 @@ def read_tipo_conteudos(db: Session = Depends(get_db)):
 
 @app.get("/conteudos/", response_model=List[schemas.ConteudoBase],  tags=['Front-end'])
 def read_conteudos(sg_tipo_conteudo : str = Query(enum=TIPOS_CONTEUDO),
-                        db: Session = Depends(get_db)):
+                        skip : int = None, limit : int = None, db: Session = Depends(get_db)):
 
     tipo_conteudo = dao.get_tipo_conteudo(db, sg_tipo_conteudo=sg_tipo_conteudo)
     if tipo_conteudo is None:
         raise HTTPException(status_code=404, detail=f"Tipo conteudo {sg_tipo_conteudo} não Encontrado")
 
-    resultados = dao.list_conteudos_por_tipo(db, cd_tipo_conteudo=tipo_conteudo.cd_tipo_conteudo)
+    resultados = dao.list_conteudos_por_tipo(db, cd_tipo_conteudo=tipo_conteudo.cd_tipo_conteudo,
+                                            skip = skip, limit = limit)
     
     return resultados
 
