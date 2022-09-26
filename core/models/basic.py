@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 
 from .database import Base, metadata
 
-association_table = Table(
+tema_indicador = Table(
     "indicador_tema",
     metadata,
     Column("cd_tema", ForeignKey("tema.cd_tema")),
@@ -19,7 +19,7 @@ class Tema(Base):
     nm_tema = Column(String)
     dc_tema = Column(String)
     aq_icone_tema = Column(String)
-    indicadores = relationship("Indicador", secondary=association_table, back_populates="temas")
+    indicadores = relationship("Indicador", secondary=tema_indicador, back_populates="temas")
     
 
     cd_tipo_situacao = Column(Integer)
@@ -38,7 +38,7 @@ class Indicador(Base):
     tx_fonte_indicador = Column(String)
     in_visibilidade = Column(Boolean)
     resultados = relationship("ResultadoIndicador")
-    temas = relationship("Tema", secondary=association_table)
+    temas = relationship("Tema", secondary=tema_indicador)
 
     cd_tipo_situacao = Column(Integer)
 

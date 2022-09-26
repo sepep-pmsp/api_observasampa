@@ -49,10 +49,6 @@ def nivel_regiao_resultado(r):
 
     return r.regiao.nivel.dc_nivel_regiao
 
-def indicadores_por_tema(r, cd_tema : int):
-
-    return list(set([indi for indi in r for tema in indi.temas if tema.cd_tema==cd_tema]))
-
 
 def nomes_niveis():
 

@@ -41,11 +41,10 @@ def read_indicadores(nm_tema : str = Query(None, enum=TEMAS),
         tema = basicdao.get_tema_por_nome(db, nm_tema)
         if tema is None:
             raise HTTPException(status_code=404, detail=f"Tema {nm_tema} não Encontrado")
+        return basicdao.list_indicadores_tema(db, cd_tema = tema.cd_tema, skip=skip, limit=limit)
 
     indicadores = basicdao.list_indicadores(db, skip=skip, limit=limit)
     
-    if nm_tema:
-        indicadores = filtros.indicadores_por_tema(indicadores, tema.cd_tema)
 
     return indicadores
 

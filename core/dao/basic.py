@@ -18,6 +18,31 @@ def list_indicadores(db: Session, skip: int = None, limit: int = None):
 
     return query.all()
 
+def list_indicadores_tema(db: Session, cd_tema : int,
+                        skip: int = None, limit: int = None):
+
+    query = db.query(basicmodels.tema_indicador)
+    query = query.join(basicmodels.Tema)
+    query = query.join(basicmodels.Indicador)
+    query = query.filter(basicmodels.Tema.cd_tema == cd_tema)
+    indicadores_tema =  query.all()
+
+    cd_indicadores = [r.cd_indicador for r in indicadores_tema]
+
+    model = basicmodels.Indicador
+    query = db.query(model)
+    query = query.filter(model.cd_tipo_situacao==1)
+    query = query.filter(model.cd_indicador.in_(cd_indicadores))
+
+    if skip or limit:
+        skip = skip or 0
+        limit = limit or 100
+        query = query.offset(skip).limit(limit)
+
+    return query.all()
+
+
+
 def get_indicador(db: Session, cd_indicador: int):
 
     model = basicmodels.Indicador
