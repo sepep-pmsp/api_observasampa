@@ -26,13 +26,13 @@ def get_db():
         db.close()
 
 @app.get("/tipo_conteudo/", response_model=List[schemas.TipoConteudo], tags=['Front-end'])
-def read_indicadores(db: Session = Depends(get_db)):
+def read_tipo_conteudos(db: Session = Depends(get_db)):
 
     tipos = dao.list_tipos_conteudo(db)
     return tipos
 
 @app.get("/conteudos/", response_model=List[schemas.ConteudoBase],  tags=['Front-end'])
-def read_resultados_indicador(sg_tipo_conteudo : str = Query(enum=TIPOS_CONTEUDO),
+def read_conteudos(sg_tipo_conteudo : str = Query(enum=TIPOS_CONTEUDO),
                         db: Session = Depends(get_db)):
 
     tipo_conteudo = dao.get_tipo_conteudo(db, sg_tipo_conteudo=sg_tipo_conteudo)
@@ -42,4 +42,13 @@ def read_resultados_indicador(sg_tipo_conteudo : str = Query(enum=TIPOS_CONTEUDO
     resultados = dao.list_conteudos_por_tipo(db, cd_tipo_conteudo=tipo_conteudo.cd_tipo_conteudo)
     
     return resultados
+
+@app.get("/conteudos/{cd_conteudo}", response_model=schemas.ConteudoReport,  tags=['Front-end'])
+def get_conteudo(cd_conteudo : int, db: Session = Depends(get_db)):
+
+    conteudo = dao.get_conteudo(db, cd_conteudo=cd_conteudo)
+    if conteudo is None:
+        raise HTTPException(status_code=404, detail=f"Conteudo {cd_conteudo} não Encontrado")
+    
+    return conteudo
 

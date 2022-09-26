@@ -37,3 +37,11 @@ def list_conteudos_por_tipo(db: Session, cd_tipo_conteudo: int):
     query = query.filter(model.cd_tipo_situacao==1)
 
     return query.all()
+
+def get_conteudo(db: Session, cd_conteudo: int):
+
+    model = models.Conteudo
+    query = db.query(model)
+    query = query.filter(model.cd_conteudo==cd_conteudo)
+
+    return query.first()
