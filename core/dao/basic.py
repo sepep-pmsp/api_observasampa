@@ -5,13 +5,16 @@ from ..schemas import basic as basicschemas
 
 from .filtros import resultados_por_nivel_cd
 
-def list_indicadores(db: Session, skip: int = 0, limit: int = 100):
+def list_indicadores(db: Session, skip: int = None, limit: int = None):
 
     model = basicmodels.Indicador
     query = db.query(model)
     query = query.filter(model.cd_tipo_situacao==1)
-    query = query.offset(skip).limit(limit)
 
+    if skip or limit:
+        skip = skip or 0
+        limit = limit or 100
+        query = query.offset(skip).limit(limit)
 
     return query.all()
 
@@ -31,6 +34,14 @@ def list_temas(db: Session):
     query = query.filter(model.cd_tipo_situacao==1)
 
     return query.all()
+
+def get_tema_por_nome(db: Session, nm_tema:str):
+
+    model = basicmodels.Tema
+    query = db.query(model)
+    query = query.filter(model.nm_tema == nm_tema)
+
+    return query.first()
 
 def resultados_indicador(db: Session, cd_indicador: int):
 

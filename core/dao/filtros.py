@@ -49,6 +49,10 @@ def nivel_regiao_resultado(r):
 
     return r.regiao.nivel.dc_nivel_regiao
 
+def indicadores_por_tema(r, cd_tema : int):
+
+    return list(set([indi for indi in r for tema in indi.temas if tema.cd_tema==cd_tema]))
+
 
 def nomes_niveis():
 
@@ -59,6 +63,17 @@ def nomes_niveis():
     niveis = query.all()
 
     return [n.sg_nivel_regiao for n in niveis]
+
+def nomes_temas():
+
+    db_gen = get_db()
+    db = next(db_gen)
+    model = basicmodels.Tema
+    query = db.query(model)
+    query = query.filter(model.cd_tipo_situacao==1)
+    temas = query.all()
+
+    return [tema.nm_tema for tema in temas]
 
 def siglas_tipo_conteudo():
 

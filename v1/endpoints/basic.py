@@ -24,8 +24,9 @@ def get_db():
         db.close()
 
 NIVEIS_REGIOES = filtros.nomes_niveis()
+TEMAS = filtros.nomes_temas()
 
-@app.get("/temas/", response_model=List[basicschemas.TemaReport], tags=['Indicadores'])
+@app.get("/temas/", response_model=List[basicschemas.TemaSimples], tags=['Indicadores'])
 def read_indicadores(db: Session = Depends(get_db)):
 
     temas = basicdao.list_temas(db)
@@ -33,9 +34,19 @@ def read_indicadores(db: Session = Depends(get_db)):
 
 
 @app.get("/indicadores/", response_model=List[basicschemas.IndicadorBase], tags=['Indicadores'])
-def read_indicadores(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def read_indicadores(nm_tema : str = Query(None, enum=TEMAS),
+                    skip: int = None, limit: int = None, db: Session = Depends(get_db)):
+
+    if nm_tema:
+        tema = basicdao.get_tema_por_nome(db, nm_tema)
+        if tema is None:
+            raise HTTPException(status_code=404, detail=f"Tema {nm_tema} não Encontrado")
 
     indicadores = basicdao.list_indicadores(db, skip=skip, limit=limit)
+    
+    if nm_tema:
+        indicadores = filtros.indicadores_por_tema(indicadores, tema.cd_tema)
+
     return indicadores
 
 @app.get("/indicadores/{cd_indicador}", response_model=basicschemas.IndicadorReport,  tags=['Indicadores'])
