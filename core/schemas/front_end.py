@@ -12,7 +12,8 @@ class ConteudoBase(OrmBase):
 
     cd_conteudo : int
     cd_tipo_conteudo : int
-    tx_conteudo : Optional[str] = None
+    dc_titulo_conteudo: Optional[str] = None
+    
     #dt_atualizacao : str esta dando problema na validacao
 
 class TipoConteudo(OrmBase):
@@ -25,6 +26,7 @@ class TipoConteudoFull(TipoConteudo):
 
     conteudos : List[ConteudoBase] = []
 
-class Conteudo(ConteudoBase):
+class ConteudoReport(ConteudoBase):
 
     tipo_conteudo : TipoConteudo
+    tx_conteudo : Optional[str] = None

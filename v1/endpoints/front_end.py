@@ -31,7 +31,7 @@ def read_indicadores(db: Session = Depends(get_db)):
     tipos = dao.list_tipos_conteudo(db)
     return tipos
 
-@app.get("/conteudos/", response_model=List[schemas.Conteudo],  tags=['Front-end'])
+@app.get("/conteudos/", response_model=List[schemas.ConteudoBase],  tags=['Front-end'])
 def read_resultados_indicador(sg_tipo_conteudo : str = Query(enum=TIPOS_CONTEUDO),
                         db: Session = Depends(get_db)):
 
