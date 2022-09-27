@@ -24,8 +24,9 @@ def get_db():
         db.close()
 
 NIVEIS_REGIOES = filtros.nomes_niveis()
+TEMAS = filtros.nomes_temas()
 
-@app.get("/temas/", response_model=List[basicschemas.TemaReport], tags=['Indicadores'])
+@app.get("/temas/", response_model=List[basicschemas.TemaSimples], tags=['Indicadores'])
 def read_indicadores(db: Session = Depends(get_db)):
 
     temas = basicdao.list_temas(db)
@@ -33,9 +34,18 @@ def read_indicadores(db: Session = Depends(get_db)):
 
 
 @app.get("/indicadores/", response_model=List[basicschemas.IndicadorBase], tags=['Indicadores'])
-def read_indicadores(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def read_indicadores(nm_tema : str = Query(None, enum=TEMAS),
+                    skip: int = None, limit: int = None, db: Session = Depends(get_db)):
+
+    if nm_tema:
+        tema = basicdao.get_tema_por_nome(db, nm_tema)
+        if tema is None:
+            raise HTTPException(status_code=404, detail=f"Tema {nm_tema} não Encontrado")
+        return basicdao.list_indicadores_tema(db, cd_tema = tema.cd_tema, skip=skip, limit=limit)
 
     indicadores = basicdao.list_indicadores(db, skip=skip, limit=limit)
+    
+
     return indicadores
 
 @app.get("/indicadores/{cd_indicador}", response_model=basicschemas.IndicadorReport,  tags=['Indicadores'])
@@ -47,8 +57,8 @@ def read_indicador_detail(cd_indicador: int, db: Session = Depends(get_db)):
     return indicador
 
 @app.get("/indicadores/{cd_indicador}/resultados", response_model=List[basicschemas.ResultadoIndicador],  tags=['Indicadores'])
-def read_resultados_indicador(cd_indicador: int, nivel_regional : str = Query(None, enum=NIVEIS_REGIOES),
-                        db: Session = Depends(get_db)):
+def read_resultados_indicador(cd_indicador: int, nivel_regional : str = Query(enum=NIVEIS_REGIOES),
+                        skip: int = None, limit: int = None, db: Session = Depends(get_db)):
 
     indicador = basicdao.get_indicador(db, cd_indicador=cd_indicador)
     if indicador is None:
@@ -57,11 +67,13 @@ def read_resultados_indicador(cd_indicador: int, nivel_regional : str = Query(No
     if nivel_regional:
         nivel = basicdao.get_nivel_regiao_sg(db, sg_nivel_regiao=nivel_regional)
         resultados = basicdao.resultados_indicador_nivel_regiao(db, cd_indicador=indicador.cd_indicador,
-                                                                cd_nivel_regiao=nivel.cd_nivel_regiao)
+                                                                cd_nivel_regiao=nivel.cd_nivel_regiao,
+                                                                skip=skip, limit=limit)
 
         return resultados
 
-    resultados = basicdao.resultados_indicador(db, cd_indicador=indicador.cd_indicador)
+    resultados = basicdao.resultados_indicador(db, cd_indicador=indicador.cd_indicador, 
+                                                skip=skip, limit=limit)
     
     return resultados
 
@@ -73,13 +85,13 @@ def list_niveis(db: Session = Depends(get_db)):
     return niveis
 
 @app.get("/regioes/", response_model=List[basicschemas.Regiao], tags=['Regiões'])
-def list_regioes(cd_nivel_regiao: int = None, skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def list_regioes(cd_nivel_regiao: int = None, skip: int = None, limit: int = None, db: Session = Depends(get_db)):
 
     if cd_nivel_regiao:
         nivel = basicdao.get_nivel_regiao(db, cd_nivel_regiao = cd_nivel_regiao)
         if nivel is None:
             raise HTTPException(status_code=404, detail=f'Nivel {cd_nivel_regiao} não existente')
-        regioes = basicdao.list_regioes_nivel(db, cd_nivel_regiao = nivel.cd_nivel_regiao)
+        regioes = basicdao.list_regioes_nivel(db, cd_nivel_regiao = nivel.cd_nivel_regiao, skip=skip, limit=limit)
         return regioes
 
     regioes = basicdao.list_regioes(db, skip=skip, limit=limit)
@@ -131,8 +143,8 @@ def read_variavel_detail(nm_resumido_variavel: str, db: Session = Depends(get_db
     return variavel
 
 @app.get("/variaveis/{nm_resumido_variavel}/resultados", response_model=List[basicschemas.ResultadoVariavel],  tags=['Variaveis'])
-def read_resultados_indicador(nm_resumido_variavel: str,  nivel_regional : str = Query(None, enum=NIVEIS_REGIOES),
-                             db: Session = Depends(get_db)):
+def read_resultados_indicador(nm_resumido_variavel: str,  nivel_regional : str = Query(enum=NIVEIS_REGIOES),
+                            skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 
     variavel = basicdao.get_variavel(db, nm_resumido_variavel=nm_resumido_variavel)
     if variavel is None:
@@ -142,10 +154,11 @@ def read_resultados_indicador(nm_resumido_variavel: str,  nivel_regional : str =
     if nivel_regional:
         nivel = basicdao.get_nivel_regiao_sg(db, sg_nivel_regiao=nivel_regional)
         resultados = basicdao.resultados_variavel_nivel_regiao(db, nm_resumido_variavel=variavel.nm_resumido_variavel,
-                                                                cd_nivel_regiao=nivel.cd_nivel_regiao)
+                                                                cd_nivel_regiao=nivel.cd_nivel_regiao, skip=skip, limit=limit)
 
         return resultados
 
-    resultados = basicdao.resultados_variavel(db, nm_resumido_variavel=variavel.nm_resumido_variavel)
+    resultados = basicdao.resultados_variavel(db, nm_resumido_variavel=variavel.nm_resumido_variavel,
+                                                 skip=skip, limit=limit)
     
     return resultados

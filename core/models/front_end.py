@@ -12,6 +12,7 @@ class Conteudo(Base):
     cd_conteudo = Column(Integer, index=True, primary_key=True)
     cd_tipo_conteudo = Column(Integer, ForeignKey("tipo_conteudo.cd_tipo_conteudo"))
     tipo_conteudo = relationship("TipoConteudo", back_populates='conteudos')
+    dc_titulo_conteudo = Column(String)
     tx_conteudo = Column(String)
     aq_imagem_conteudo = Column(String) #file depois ver como tratar - mandar como stream na response
     aq_conteudo = Column(String) #file depois ver como tratar - mandar como stream na response
@@ -29,3 +30,13 @@ class TipoConteudo(Base):
     sg_tipo_conteudo = Column(String)
     dc_tipo_conteudo = Column(String)
     conteudos = relationship("Conteudo", back_populates='tipo_conteudo')
+
+class ParametrosSistema(Base):
+
+    __tablename__ = 'parametro_sistema'
+    metadata = metadata
+
+    cd_parametro_sistema = Column(Integer, index=True, primary_key=True)
+    cd_chave_parametro = Column(String)
+    dc_chave_parametro = Column(String)
+    vl_chave_parametro = Column(String)
