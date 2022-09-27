@@ -99,7 +99,7 @@ def arq_conteudo(cd_conteudo : int, db: Session = Depends(get_db)):
 
     return response
 
-@app.get("/indicadores/{cd_indicador}", response_model=schemas.FichaIndicador,  tags=['Front-end'])
+@app.get("/ficha_indicador/{cd_indicador}", response_model=schemas.FichaIndicador,  tags=['Front-end'])
 def ficha_indicador(cd_indicador: int, db: Session = Depends(get_db)):
 
     indicador = basicdao.get_indicador(db, cd_indicador=cd_indicador)
