@@ -60,3 +60,19 @@ def get_arq_tema(db: Session, cd_tema: int):
     query = query.filter(model.cd_tema==cd_tema)
 
     return query.first()
+
+def get_txt_institucional(db: Session):
+
+    dados = {'titulo' : 'TX_MD_INSTITUCIONAL_TITULO',
+            'resumo' : 'TX_MD_INSTITUCIONAL_RESUMO',
+            'txt_completo' : 'TX_MD_INSTITUCIONAL_COMPLETO'}
+    model = models.ParametrosSistema
+
+    for attr_name, cd_chave in dados.items():
+        query = db.query(model)
+        query = query.filter(model.cd_chave_parametro==cd_chave)
+        r = query.first()
+
+        dados[attr_name] = r.vl_chave_parametro
+
+    return dados

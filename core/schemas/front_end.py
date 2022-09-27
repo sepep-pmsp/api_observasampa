@@ -68,4 +68,12 @@ class TemaFull(TemaBase):
     dc_tema : str
     aq_icone_tema : Optional[str] = None
 
+#note que esse nao é ORM
+class Institucional(BaseModel):
+
+    titulo : str
+    resumo : str
+    txt_completo : str
+
+
 

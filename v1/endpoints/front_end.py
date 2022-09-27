@@ -133,3 +133,9 @@ def img_tema(cd_tema : int, db: Session = Depends(get_db)):
     response.headers["Content-Disposition"] = f"attachment; filename=icone_tema_{tema.cd_tema}.png"
 
     return response
+
+@app.get("/txt_institucional/", response_model=schemas.Institucional, tags=['Front-end'])
+def get_txt_institucional(db: Session = Depends(get_db)):
+
+    institucional = dao.get_txt_institucional(db)
+    return institucional
