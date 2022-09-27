@@ -31,16 +31,23 @@ class Indicador(Base):
 
     cd_indicador = Column(Integer, index=True, primary_key=True)
     nm_indicador = Column(String)
+    nm_completo_indicador = Column(String)
+    dc_formula_indicador = Column(String)
     dc_conceito_indicador = Column(String)
+    dc_interpretacao_indicador = Column(String)
     dc_nota_tecnica = Column(String)
     dc_interpretacao_indicador = Column(String)
     dc_periodicidade_indicador = Column(String)
+    dc_unidade_territorial = Column(String)
+    dc_serie_historica = Column(String)
+    dc_observacao_indicador = Column(String)
     tx_fonte_indicador = Column(String)
     in_visibilidade = Column(Boolean)
     resultados = relationship("ResultadoIndicador")
     temas = relationship("Tema", secondary=tema_indicador)
 
     cd_tipo_situacao = Column(Integer)
+
 
 class NivelRegiao(Base):
 

@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 from fastapi.responses import StreamingResponse
 
 from core.dao import front_end as dao
+from core.dao import basic as basicdao
 from core.models import front_end as models
 from core.schemas import front_end as schemas
 from core.models.database import SessionLocal, engine
@@ -97,4 +98,12 @@ def arq_conteudo(cd_conteudo : int, db: Session = Depends(get_db)):
     response.headers["Content-Disposition"] = f"attachment; filename=conteudo_{conteudo.cd_conteudo}.pdf"
 
     return response
+
+@app.get("/indicadores/{cd_indicador}", response_model=schemas.FichaIndicador,  tags=['Front-end'])
+def ficha_indicador(cd_indicador: int, db: Session = Depends(get_db)):
+
+    indicador = basicdao.get_indicador(db, cd_indicador=cd_indicador)
+    if indicador is None:
+        raise HTTPException(status_code=404, detail=f"Indicador {cd_indicador} Não Encontrado")
+    return indicador
 
