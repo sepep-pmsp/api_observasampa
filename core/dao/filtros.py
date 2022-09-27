@@ -68,6 +68,13 @@ def arquivo_conteudo(r):
 
     return io
 
+def icone_tema(r):
+
+    arq = r.aq_icone_tema
+    io = BytesIO(arq)
+
+    return io
+
 
 def nomes_niveis():
 

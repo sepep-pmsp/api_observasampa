@@ -13,7 +13,7 @@ from core.models import front_end as models
 from core.schemas import front_end as schemas
 from core.models.database import SessionLocal, engine
 
-from core.dao.filtros import siglas_tipo_conteudo, arquivo_conteudo, image_conteudo
+from core.dao.filtros import siglas_tipo_conteudo, arquivo_conteudo, image_conteudo, icone_tema
 
 
 app = APIRouter()
@@ -70,10 +70,10 @@ def img_conteudo(cd_conteudo : int, db: Session = Depends(get_db)):
     io = image_conteudo(conteudo)
 
     response = StreamingResponse(iter([io.getvalue()]),
-                            media_type="image"
+                            media_type="image/png"
        )
     
-    response.headers["Content-Disposition"] = f"attachment; filename=conteudo_{conteudo.cd_conteudo}.img"
+    response.headers["Content-Disposition"] = f"attachment; filename=conteudo_{conteudo.cd_conteudo}.png"
 
     return response
 
@@ -107,3 +107,29 @@ def ficha_indicador(cd_indicador: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail=f"Indicador {cd_indicador} Não Encontrado")
     return indicador
 
+@app.get("/temas/", response_model=List[schemas.TemaBase], tags=['Front-end'])
+def read_temas(db: Session = Depends(get_db)):
+
+    temas = basicdao.list_temas(db)
+    return temas
+
+@app.get("/temas/{cd_tema}/icone", tags=['Front-end'], 
+        response_class=StreamingResponse)
+def img_tema(cd_tema : int, db: Session = Depends(get_db)):
+
+
+    tema = dao.get_arq_tema(db, cd_tema=cd_tema)
+    if tema is None:
+        raise HTTPException(status_code=404, detail=f"Tema {cd_tema} não Encontrado")
+    elif not tema.aq_icone_tema:
+        raise HTTPException(status_code=404, detail=f"Tema {cd_tema} não possui arquivo")
+
+    io = icone_tema(tema)
+
+    response = StreamingResponse(iter([io.getvalue()]),
+                            media_type="img/png"
+       )
+    
+    response.headers["Content-Disposition"] = f"attachment; filename=icone_tema_{tema.cd_tema}.png"
+
+    return response

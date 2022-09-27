@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Session
 
 from ..models import front_end as models
+from ..models import basic as basicmodels
 from ..schemas import front_end as schemas
 
 def list_tipos_conteudo(db: Session):
@@ -49,5 +50,13 @@ def get_conteudo(db: Session, cd_conteudo: int):
     model = models.Conteudo
     query = db.query(model)
     query = query.filter(model.cd_conteudo==cd_conteudo)
+
+    return query.first()
+
+def get_arq_tema(db: Session, cd_tema: int):
+
+    model = basicmodels.Tema
+    query = db.query(model)
+    query = query.filter(model.cd_tema==cd_tema)
 
     return query.first()
