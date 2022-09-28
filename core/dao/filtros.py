@@ -12,6 +12,21 @@ def get_db():
     finally:
         db.close()
 
+
+def paginar_resultados(r, skip=None, limit=None):
+
+    if skip or limit:
+        skip = skip or 0
+        limit = limit or 100
+
+        init = skip
+        end = skip  + limit
+
+        return r[init:end]
+    
+    else:
+        return r
+
 def resultados_por_nivel(resultados, nivel):
     
     niveis = {'Distrito', 'Município', 'Subprefeitura'}
