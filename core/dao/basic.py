@@ -73,6 +73,7 @@ def list_dash(db: Session):
     model = basicmodels.Dashboard
     query = db.query(model)
     query=query.filter(model.in_publicado == 'S')
+    query = query.order_by(model.dt_criacao.desc())
 
     return query.all()
 

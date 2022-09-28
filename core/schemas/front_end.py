@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 from pydantic import BaseModel, validator
+from datetime import datetime
 
 from .transformacoes import parse_formula, parse_fonte
 
@@ -15,8 +16,7 @@ class ConteudoBase(OrmBase):
     cd_conteudo : int
     cd_tipo_conteudo : int
     dc_titulo_conteudo: Optional[str] = None
-    
-    #dt_atualizacao : str esta dando problema na validacao
+    dt_atualizacao : datetime
 
 class TipoConteudo(OrmBase):
 

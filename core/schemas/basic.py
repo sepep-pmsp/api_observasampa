@@ -1,6 +1,7 @@
 from typing import List, Union, Optional
 
 from pydantic import BaseModel, validator 
+from datetime import datetime
 
 from .transformacoes import padrao_nome_regiao
 
@@ -27,7 +28,7 @@ class Dashboard(DashboardSimples):
     dc_dashboard : Union[str, None] = None 
     link_dashboard : str
     nr_ordem_exibicao : str
-    #dt_criacao : str
+    dt_criacao : datetime
     cd_status_dashboard : str
     in_publicado : str
 

@@ -27,7 +27,8 @@ def list_conteudos(db: Session):
     model = models.Conteudo
     query = db.query(model)
     query = query.filter(model.cd_tipo_situacao==1)
-
+    query = query.order_by(model.dt_atualizacao.desc())
+    
     return query.all()
 
 def list_conteudos_por_tipo(db: Session, cd_tipo_conteudo: int, skip: int = None, 
@@ -37,7 +38,7 @@ def list_conteudos_por_tipo(db: Session, cd_tipo_conteudo: int, skip: int = None
     query = db.query(model)
     query = query.filter(model.cd_tipo_conteudo==cd_tipo_conteudo)
     query = query.filter(model.cd_tipo_situacao==1)
-
+    query = query.order_by(model.dt_atualizacao.desc())
     if skip or limit:
         skip = skip or 0
         limit = limit or 100
