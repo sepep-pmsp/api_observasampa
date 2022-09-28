@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from ..models import basic as basicmodels
 from ..schemas import basic as basicschemas
 
-from .filtros import resultados_por_nivel_cd
+from .filtros import resultados_por_nivel_cd, paginar_resultados
 
 def list_indicadores(db: Session, skip: int = None, limit: int = None):
 
@@ -90,14 +90,11 @@ def resultados_indicador_nivel_regiao(db: Session, cd_indicador: int, cd_nivel_r
     query = db.query(model)
     query = query.filter(model.cd_tipo_situacao==1)
     query = query.filter(model.cd_indicador==cd_indicador)
-    if skip or limit:
-        skip = skip or 0
-        limit = limit or 100
-        query = query.offset(skip).limit(limit)
-    
-    r = query.all()
 
-    return resultados_por_nivel_cd(r, cd_nivel_regiao)
+    r = query.all()
+    r = resultados_por_nivel_cd(r, cd_nivel_regiao)
+
+    return paginar_resultados(r, skip, limit)
 
 def list_regioes(db: Session, skip: int = None, limit: int = None):
 
@@ -215,11 +212,7 @@ def resultados_variavel_nivel_regiao(db: Session, nm_resumido_variavel: str, cd_
     query = query.filter(model.cd_tipo_situacao==1)
     query = query.filter(model.cd_variavel==variavel.cd_variavel)
 
-    if skip or limit:
-        skip = skip or 0
-        limit = limit or 100
-        query = query.offset(skip).limit(limit)
-
     r = query.all()
+    r = resultados_por_nivel_cd(r, cd_nivel_regiao)
 
-    return resultados_por_nivel_cd(r, cd_nivel_regiao)
+    return paginar_resultados(r, skip, limit)

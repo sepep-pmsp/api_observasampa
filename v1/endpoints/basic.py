@@ -58,7 +58,7 @@ def read_indicador_detail(cd_indicador: int, db: Session = Depends(get_db)):
 
 @app.get("/indicadores/{cd_indicador}/resultados", response_model=List[basicschemas.ResultadoIndicador],  tags=['Indicadores'])
 def read_resultados_indicador(cd_indicador: int, nivel_regional : str = Query(enum=NIVEIS_REGIOES),
-                        skip: int = None, limit: int = None, db: Session = Depends(get_db)):
+                        skip: int = None, limit: int = 100, db: Session = Depends(get_db)):
 
     indicador = basicdao.get_indicador(db, cd_indicador=cd_indicador)
     if indicador is None:
@@ -129,7 +129,7 @@ def list_periodos_indicador(cd_indicador: int, db: Session = Depends(get_db)):
     return periodos
 
 @app.get("/variaveis/", response_model=List[basicschemas.VariavelBase], tags=['Variaveis'])
-def read_variaveis(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+def read_variaveis(skip: int = None, limit: int = None, db: Session = Depends(get_db)):
 
     variaveis = basicdao.list_variaveis(db, skip=skip, limit=limit)
     return variaveis
@@ -144,7 +144,7 @@ def read_variavel_detail(nm_resumido_variavel: str, db: Session = Depends(get_db
 
 @app.get("/variaveis/{nm_resumido_variavel}/resultados", response_model=List[basicschemas.ResultadoVariavel],  tags=['Variaveis'])
 def read_resultados_indicador(nm_resumido_variavel: str,  nivel_regional : str = Query(enum=NIVEIS_REGIOES),
-                            skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
+                            skip: int = None, limit: int = 100, db: Session = Depends(get_db)):
 
     variavel = basicdao.get_variavel(db, nm_resumido_variavel=nm_resumido_variavel)
     if variavel is None:
