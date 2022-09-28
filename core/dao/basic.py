@@ -68,6 +68,24 @@ def get_tema_por_nome(db: Session, nm_tema:str):
 
     return query.first()
 
+def list_dash(db: Session):
+
+    model = basicmodels.Dashboard
+    query = db.query(model)
+    query=query.filter(model.in_publicado == 'S')
+
+    return query.all()
+
+def get_dashboard_full(db: Session, cd_gerenciador_dashboard:str):
+
+    model = basicmodels.Dashboard
+    query = db.query(model)
+    query = query.filter(model.cd_gerenciador_dashboard == cd_gerenciador_dashboard)
+    #garantir que vai mostrar só publicado, mesmo se o cara advinhe o codigo
+    query=query.filter(model.in_publicado == 'S')
+
+    return query.first()
+
 def resultados_indicador(db: Session, cd_indicador: int,
                         skip: int = None, limit: int = None):
 

@@ -20,9 +20,26 @@ class Tema(Base):
     dc_tema = Column(String)
     aq_icone_tema = Column(String)
     indicadores = relationship("Indicador", secondary=tema_indicador, back_populates="temas")
-    
+    dashboards = relationship("Dashboard", back_populates="tema")
 
     cd_tipo_situacao = Column(Integer)
+    
+
+class Dashboard(Base):
+    __tablename__ = 'gerenciador_dashboard'
+    metadata = metadata
+
+    cd_gerenciador_dashboard = Column(Integer, primary_key=True)
+    cd_tema = Column(Integer, ForeignKey("tema.cd_tema"))
+    tema = relationship("Tema", back_populates="dashboards")
+    nm_titulo_dashboard = Column(String)
+    dc_dashboard = Column(String) 
+    link_dashboard = Column(String)
+    aq_icone_gerenciador_dashboard = Column(String)
+    nr_ordem_exibicao = Column(String)
+    dt_criacao = Column(String)
+    cd_status_dashboard = Column(String)
+    in_publicado = Column(String)
 
 
 class Indicador(Base):
