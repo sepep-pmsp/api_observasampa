@@ -66,6 +66,10 @@ def nivel_regiao_resultado(r):
 
     return r.regiao.nivel.dc_nivel_regiao
 
+def get_lst_indicadores(query):
+
+    return [indi.cd_indicador for indi in query.all()]
+
 
 def image_conteudo(r):
 

@@ -27,7 +27,7 @@ def list_indicadores_tema(db: Session, cd_tema : int,
     query = query.filter(basicmodels.Tema.cd_tema == cd_tema)
     indicadores_tema =  query.all()
 
-    cd_indicadores = [r.cd_indicador for r in indicadores_tema]
+    cd_indicadores = [r.cd_indicador for r in indicadores_tema if r.cd_tipo_situacao==1]
 
     model = basicmodels.Indicador
     query = db.query(model)

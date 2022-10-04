@@ -5,6 +5,8 @@ from datetime import datetime
 
 from .transformacoes import parse_formula, parse_fonte
 
+from . import basic as basicschemas
+
 
 class OrmBase(BaseModel):
     
@@ -74,6 +76,15 @@ class Institucional(BaseModel):
     titulo : str
     resumo : str
     txt_completo : str
+
+
+class SearchIndicador(BaseModel):
+
+    busca_textual : Optional[str] = None
+    temas : List[basicschemas.TemaSimples] = None
+    niveis_regionais : List[basicschemas.NivelRegiao] = None
+    regioes : List[basicschemas.RegiaoSimples] = None
+    indicadores : List[basicschemas.IndicadorBase] = None
 
 
 
