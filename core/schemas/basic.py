@@ -64,13 +64,15 @@ class NivelRegiao(OrmBase):
     dc_nivel_regiao : str
     sg_nivel_regiao : str
 
-
-class Regiao(OrmBase):
+class RegiaoSimples(OrmBase):
 
     cd_regiao : int
     sg_regiao : str
     nm_regiao : str
     cd_nivel_regiao : str
+
+class Regiao(RegiaoSimples):
+
     nm_regiao_padrao : Optional[str] = None
 
     @validator('nm_regiao_padrao', always=True)

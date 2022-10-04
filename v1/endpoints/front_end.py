@@ -156,3 +156,13 @@ def get_txt_institucional(db: Session = Depends(get_db)):
 
     institucional = dao.get_txt_institucional(db)
     return institucional
+
+@app.post("/search_indicadores", response_model=schemas.SearchIndicador, tags=['Front-end'])
+def post_search_indicador(search:schemas.SearchIndicador, db: Session= Depends(get_db)):
+
+
+    search = dao.search_indicadores(db, search)
+
+    return search
+
+
