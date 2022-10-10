@@ -157,6 +157,26 @@ def get_txt_institucional(db: Session = Depends(get_db)):
     institucional = dao.get_txt_institucional(db)
     return institucional
 
+@app.get("/regioes/niveis/", response_model=List[basicschemas.NivelRegiao], tags=['Front-end'])
+def list_niveis(db: Session = Depends(get_db)):
+
+    niveis = basicdao.list_niveis_regioes(db)
+    return niveis
+
+@app.get("/regioes/", response_model=List[basicschemas.Regiao], tags=['Front-end'])
+def list_regioes(cd_nivel_regiao: int = None, skip: int = None, limit: int = None, db: Session = Depends(get_db)):
+
+    if cd_nivel_regiao:
+        nivel = basicdao.get_nivel_regiao(db, cd_nivel_regiao = cd_nivel_regiao)
+        if nivel is None:
+            raise HTTPException(status_code=404, detail=f'Nivel {cd_nivel_regiao} não existente')
+        regioes = basicdao.list_regioes_nivel(db, cd_nivel_regiao = nivel.cd_nivel_regiao, skip=skip, limit=limit)
+        return regioes
+
+    regioes = basicdao.list_regioes(db, skip=skip, limit=limit)
+    return regioes
+
+
 @app.post("/search_indicadores", response_model=List[basicschemas.IndicadorBase], tags=['Front-end'])
 def post_search_indicador(search:schemas.SearchIndicador, db: Session= Depends(get_db)):
 
