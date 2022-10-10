@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Session
+from sqlalchemy import distinct
 
 from ..models import front_end as models
 from ..models import basic as basicmodels
@@ -113,7 +114,8 @@ def search_indicador_nivel_regional(db: Session, query, niveis_regionais: list):
     query_aux_2 = db.query(basicmodels.ResultadoIndicador)
     query_aux_2 = query_aux_2.filter(basicmodels.ResultadoIndicador.cd_regiao.in_(regioes_nivel))
     query_aux_2 = query_aux_2.with_entities(basicmodels.ResultadoIndicador.cd_indicador)
-    cd_indicadores_nivel = set([r.cd_indicador for r in query_aux_2.all()])
+    query_aux_2 = query_aux_2.distinct(basicmodels.ResultadoIndicador.cd_indicador)
+    cd_indicadores_nivel = [r.cd_indicador for r in query_aux_2.all()]
     model = basicmodels.Indicador
     query = query.filter(model.cd_indicador.in_(cd_indicadores_nivel))
 
@@ -125,8 +127,8 @@ def search_indicadores_regiao(db: Session, query, regioes: list):
     query_aux = db.query(basicmodels.ResultadoIndicador)
     query_aux = query_aux.filter(basicmodels.ResultadoIndicador.cd_regiao.in_(regioes))
     query_aux = query_aux.with_entities(basicmodels.ResultadoIndicador.cd_indicador)
-
-    cd_indicadores_regioes = set([r.cd_indicador for r in query_aux.all()])
+    query_aux = query_aux.distinct(basicmodels.ResultadoIndicador.cd_indicador)
+    cd_indicadores_regioes = [r.cd_indicador for r in query_aux.all()]
 
     model = basicmodels.Indicador
     query = query.filter(model.cd_indicador.in_(cd_indicadores_regioes))
