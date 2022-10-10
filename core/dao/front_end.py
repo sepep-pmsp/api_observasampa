@@ -134,7 +134,7 @@ def search_indicadores_regiao(db: Session, query, regioes: list):
     return query
 
 
-def search_indicadores(db: Session, search : schemas.SearchIndicador):
+def search_indicadores(db: Session, search : schemas.SearchIndicador, skip: int = None, limit: int=None):
 
 
     model = basicmodels.Indicador
@@ -154,8 +154,13 @@ def search_indicadores(db: Session, search : schemas.SearchIndicador):
     #soh busca nivel regional se nao especificar regiao
     if niveis_regionais and not regioes:
         query = search_indicador_nivel_regional(db, query, niveis_regionais)
-        
+
     if regioes:
         query = search_indicadores_regiao(db, query, regioes)
+
+    if skip or limit:
+        skip = skip or 0
+        limit = limit or 100
+        query = query.offset(skip).limit(limit)
 
     return query.all()
