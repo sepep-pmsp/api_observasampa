@@ -81,10 +81,9 @@ class Institucional(BaseModel):
 class SearchIndicador(BaseModel):
 
     busca_textual : Optional[str] = None
-    temas : List[basicschemas.TemaSimples] = None
-    niveis_regionais : List[basicschemas.NivelRegiao] = None
-    regioes : List[basicschemas.RegiaoSimples] = None
-    indicadores : List[basicschemas.IndicadorBase] = None
+    cd_temas : List[int] = None
+    cd_niveis_regionais : List[int] = None
+    cd_regioes : List[int] = None
 
 
 
