@@ -4,6 +4,7 @@ import core.models.basic as basicmodels
 import core.models.front_end as front_end_models
 
 from io import BytesIO
+from bs4 import BeautifulSoup
 
 def get_db():
     db = SessionLocal()
@@ -125,3 +126,32 @@ def siglas_tipo_conteudo():
     tipos = query.all()
 
     return [tipo.sg_tipo_conteudo for tipo in tipos]
+
+def sanitize_and_truncate(v, max_chars):
+
+    soup = BeautifulSoup(v)
+    num_chars = 0
+    flag_estourado = False
+    txt = []
+    for tag in soup.find_all(name=True):
+        try:
+            txt_tag = str(tag.text)
+            tamanho_tag = len(txt_tag)
+        except IndexError:
+            continue
+        num_chars += tamanho_tag
+
+        if num_chars >= max_chars and not flag_estourado:
+            sobra = tamanho_tag-(num_chars-max_chars)
+            txt_tag = txt_tag[:sobra] + '...'
+            flag_estourado = True
+            txt_tag = txt_tag.replace('\n', ' ').replace('\t', '').replace('\r', '')
+            txt.append(txt_tag)
+        else:
+            txt_tag = txt_tag.replace('\n', ' ').replace('\t', '').replace('\r', '')
+            txt.append(txt_tag)
+
+        if flag_estourado:
+            break
+    
+    return ' '.join(txt)

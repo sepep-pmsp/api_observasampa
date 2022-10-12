@@ -1,9 +1,9 @@
 from typing import List, Optional
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, validator, root_validator
 from datetime import datetime
 
-from .transformacoes import parse_formula, parse_fonte
+from .transformacoes import parse_formula, parse_fonte, html_sanitizer
 
 from . import basic as basicschemas
 
@@ -19,6 +19,9 @@ class ConteudoBase(OrmBase):
     cd_tipo_conteudo : int
     dc_titulo_conteudo: Optional[str] = None
     dt_atualizacao : datetime
+    txt_truncado : str = None
+    has_arq : bool = False
+    has_img : bool = False
 
 class TipoConteudo(OrmBase):
 
@@ -34,6 +37,12 @@ class ConteudoReport(ConteudoBase):
 
     tipo_conteudo : TipoConteudo
     tx_conteudo : Optional[str] = None
+
+    @validator('tx_conteudo', always=True)
+    def sanitize(cls, v) -> str:
+        if v:
+            return html_sanitizer(v)
+            
 
 class TemaBase(OrmBase):
     
@@ -76,6 +85,11 @@ class Institucional(BaseModel):
     titulo : str
     resumo : str
     txt_completo : str
+
+    @validator('txt_completo', always=True)
+    def sanitize(cls, v) -> str:
+        if v:
+            return html_sanitizer(v)
 
 
 class SearchIndicador(BaseModel):
