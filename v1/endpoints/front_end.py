@@ -52,7 +52,7 @@ def read_tipo_conteudos(db: Session = Depends(get_db)):
     return tipos
 
 @app.get("/conteudos/", response_model=List[schemas.ConteudoBase],  tags=['Front-end'])
-def read_conteudos(sg_tipo_conteudo : str = Query(enum=TIPOS_CONTEUDO),
+def read_conteudos(sg_tipo_conteudo : str = Query(enum=TIPOS_CONTEUDO), truncate : bool = False, max_chars : int = 100,
                         skip : int = None, limit : int = None, db: Session = Depends(get_db)):
 
     tipo_conteudo = dao.get_tipo_conteudo(db, sg_tipo_conteudo=sg_tipo_conteudo)
@@ -60,7 +60,7 @@ def read_conteudos(sg_tipo_conteudo : str = Query(enum=TIPOS_CONTEUDO),
         raise HTTPException(status_code=404, detail=f"Tipo conteudo {sg_tipo_conteudo} não Encontrado")
 
     resultados = dao.list_conteudos_por_tipo(db, cd_tipo_conteudo=tipo_conteudo.cd_tipo_conteudo,
-                                            skip = skip, limit = limit)
+                                            skip = skip, limit = limit, truncate=truncate, max_chars=max_chars)
 
     for r in resultados:
         if r.aq_imagem_conteudo:

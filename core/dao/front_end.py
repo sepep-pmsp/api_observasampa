@@ -7,7 +7,7 @@ from ..schemas import front_end as schemas
 from ..schemas import basic as basicschemas
 from . import basic as basicdao
 
-from .filtros import get_lst_indicadores
+from .filtros import get_lst_indicadores, sanitize_and_truncate
 
 def list_tipos_conteudo(db: Session):
 
@@ -37,7 +37,7 @@ def list_conteudos(db: Session):
     return query.all()
 
 def list_conteudos_por_tipo(db: Session, cd_tipo_conteudo: int, skip: int = None, 
-                            limit : int = None):
+                            limit : int = None, truncate: bool = False, max_chars: int = 100):
 
     model = models.Conteudo
     query = db.query(model)
@@ -49,7 +49,14 @@ def list_conteudos_por_tipo(db: Session, cd_tipo_conteudo: int, skip: int = None
         limit = limit or 100
         query = query.offset(skip).limit(limit)
 
-    return query.all()
+    results = query.all()
+    if truncate:
+        for r in results:
+            conteudo = r.tx_conteudo
+            truncado = sanitize_and_truncate(conteudo, max_chars)
+            r.__setattr__('txt_truncado', truncado)
+    
+    return results
 
 def get_conteudo(db: Session, cd_conteudo: int):
 
