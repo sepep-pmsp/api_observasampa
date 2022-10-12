@@ -61,6 +61,13 @@ def read_conteudos(sg_tipo_conteudo : str = Query(enum=TIPOS_CONTEUDO),
 
     resultados = dao.list_conteudos_por_tipo(db, cd_tipo_conteudo=tipo_conteudo.cd_tipo_conteudo,
                                             skip = skip, limit = limit)
+
+    for r in resultados:
+        if r.aq_imagem_conteudo:
+            print(r.aq_imagem_conteudo)
+            r.__setattr__('has_arq', True)
+        if r.aq_conteudo:
+            r.__setattr__('has_img', True)
     
     return resultados
 
@@ -70,7 +77,10 @@ def get_conteudo(cd_conteudo : int, db: Session = Depends(get_db)):
     conteudo = dao.get_conteudo(db, cd_conteudo=cd_conteudo)
     if conteudo is None:
         raise HTTPException(status_code=404, detail=f"Conteudo {cd_conteudo} não Encontrado")
-    
+    if conteudo.aq_imagem_conteudo:
+        conteudo.__setattr__('has_arq', True)
+    if conteudo.aq_conteudo:
+        conteudo.__setattr__('has_img', True)
     return conteudo
 
 @app.get("/conteudos/{cd_conteudo}/imagem", tags=['Front-end'], 

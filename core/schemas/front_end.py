@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from pydantic import BaseModel, validator
+from pydantic import BaseModel, validator, root_validator
 from datetime import datetime
 
 from .transformacoes import parse_formula, parse_fonte
@@ -19,6 +19,8 @@ class ConteudoBase(OrmBase):
     cd_tipo_conteudo : int
     dc_titulo_conteudo: Optional[str] = None
     dt_atualizacao : datetime
+    has_arq : bool = False
+    has_img : bool = False
 
 class TipoConteudo(OrmBase):
 

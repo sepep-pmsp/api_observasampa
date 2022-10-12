@@ -14,8 +14,8 @@ class Conteudo(Base):
     tipo_conteudo = relationship("TipoConteudo", back_populates='conteudos')
     dc_titulo_conteudo = Column(String)
     tx_conteudo = Column(String)
-    aq_imagem_conteudo = Column(String) #file depois ver como tratar - mandar como stream na response
-    aq_conteudo = Column(String) #file depois ver como tratar - mandar como stream na response
+    aq_imagem_conteudo = Column(String) 
+    aq_conteudo = Column(String) 
     dt_atualizacao = Column(String)
     #nm_ordem_conteudo = Column(String) --> está vazio em todos
 
