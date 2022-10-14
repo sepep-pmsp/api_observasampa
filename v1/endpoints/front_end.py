@@ -119,7 +119,7 @@ def arq_conteudo(cd_conteudo : int, db: Session = Depends(get_db)):
     io = arquivo_conteudo(conteudo)
 
     response = StreamingResponse(iter([io.getvalue()]),
-                            media_type="PDF"
+                            media_type="application/pdf"
        )
     
     response.headers["Content-Disposition"] = f"attachment; filename=conteudo_{conteudo.cd_conteudo}.pdf"
