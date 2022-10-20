@@ -49,6 +49,12 @@ class TemaBase(OrmBase):
     cd_tema : int
     nm_tema : str
 
+class IndicadorBaseFront(OrmBase):
+
+    cd_indicador : int
+    nm_indicador : str
+    nm_completo_indicador : Optional[str] = None
+
 class FichaIndicador(OrmBase):
 
     cd_indicador : int
