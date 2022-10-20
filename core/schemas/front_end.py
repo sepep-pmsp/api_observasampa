@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Union
 
 from pydantic import BaseModel, validator, root_validator
 from datetime import datetime
@@ -69,10 +69,15 @@ class FichaIndicador(OrmBase):
     resultados : List[basicschemas.ResultadoIndicador]
 
     @validator('dc_formula_indicador', always=True)
-    def formula_validator(cls, v) -> str:
+    def formula_validator(cls, v) -> Union[str, None]:
+        if v is None:
+            return ''
         return parse_formula(v)
     @validator('tx_fonte_indicador', always=True)
-    def fonte_validator(cls, v) -> str:
+    def fonte_validator(cls, v) -> Union[str, None]:
+        
+        if v is None:
+            return ''
         return parse_fonte(v)
 
 class TemaFull(TemaBase):
