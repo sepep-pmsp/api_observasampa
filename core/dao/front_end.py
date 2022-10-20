@@ -90,6 +90,15 @@ def get_txt_institucional(db: Session):
 
     return dados
 
+def get_ficha_indicador(db: Session, cd_indicador: int):
+
+    indicador = basicdao.get_indicador(db, cd_indicador)
+    resultados = basicdao.resultados_indicador(db, cd_indicador)
+
+    indicador.__setattr__('resultados', resultados)
+
+    return indicador
+
 def search_indicador_nome(db: Session, query, nom_substring : str):
     
     model = basicmodels.Indicador

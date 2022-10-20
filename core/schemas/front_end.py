@@ -66,6 +66,7 @@ class FichaIndicador(OrmBase):
     tx_fonte_indicador : Optional[str] = None
     in_visibilidade : Optional[bool] = None
     temas : List[TemaBase]
+    resultados : List[basicschemas.ResultadoIndicador]
 
     @validator('dc_formula_indicador', always=True)
     def formula_validator(cls, v) -> str:
