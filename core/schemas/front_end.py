@@ -111,5 +111,12 @@ class SearchIndicador(BaseModel):
     cd_niveis_regionais : List[int] = None
     cd_regioes : List[int] = None
 
+class DadosHomePage(BaseModel):
+
+    pib : int
+    populacaoSP : int
+    areaSPKm : int
+    densidadeDemograficaKm : int
+
 
 

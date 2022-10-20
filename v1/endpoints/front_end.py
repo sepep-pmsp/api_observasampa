@@ -187,6 +187,19 @@ def list_regioes(cd_nivel_regiao: int = None, skip: int = None, limit: int = Non
     regioes = basicdao.list_regioes(db, skip=skip, limit=limit)
     return regioes
 
+@app.get("/dados_home_page", response_model=schemas.DadosHomePage,  tags=['Front-end'])
+def dados_home():
+    '''Mock endpoint que depois deve puxar os dados do banco.
+    Esta sendo feito assim para permitir atualizacao dos dados na homepage posteriormente.'''
+
+    dados = {
+        "pib": 2348338,
+        "populacaoSP": 12400000,
+        "areaSPKm": 1521,
+        "densidadeDemograficaKm": 7398
+        }
+    
+    return dados
 
 @app.post("/search_indicadores", response_model=List[schemas.IndicadorBaseFront], tags=['Front-end'])
 def post_search_indicador(search:schemas.SearchIndicador, skip: int = None, limit: int = None, db: Session= Depends(get_db)):
