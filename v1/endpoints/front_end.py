@@ -129,7 +129,8 @@ def arq_conteudo(cd_conteudo : int, db: Session = Depends(get_db)):
 @app.get("/ficha_indicador/{cd_indicador}", response_model=schemas.FichaIndicador,  tags=['Front-end'])
 def ficha_indicador(cd_indicador: int, db: Session = Depends(get_db)):
 
-    indicador = basicdao.get_indicador(db, cd_indicador=cd_indicador)
+    indicador = dao.get_ficha_indicador(db, cd_indicador=cd_indicador)
+    print(indicador.tx_fonte_indicador)
     if indicador is None:
         raise HTTPException(status_code=404, detail=f"Indicador {cd_indicador} Não Encontrado")
     return indicador

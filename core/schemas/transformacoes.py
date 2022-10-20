@@ -16,27 +16,35 @@ def parse_formula(formula):
 
     try:
         parsed = []
-        formula = json.loads(formula)
-        for item in formula:
+        formula_load = json.loads(formula)
+        if formula_load is None:
+            return ''
+        for item in formula_load:
             parsed.append(item.get('caractere', ''))
 
         return ' '.join(parsed)
 
     except (JSONDecodeError, ValueError):
-        return formula
+        if formula is None:
+            return ''
+    return str(formula)
 
 def parse_fonte(fonte):
 
     try:
         parsed = []
-        fonte = json.loads(fonte)
-        for item in fonte:
+        fonte_load = json.loads(fonte)
+        if fonte_load is None:
+            return ''
+        for item in fonte_load:
             parsed.append(item.get('nm_fonte', ''))
-
+        print(parsed)
         return '; '.join(parsed)
         
     except (JSONDecodeError, ValueError):
-        return fonte
+        if fonte is None:
+            return ''
+    return str(fonte)
 
 def html_sanitizer(v):
 
