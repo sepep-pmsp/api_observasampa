@@ -188,7 +188,7 @@ def list_regioes(cd_nivel_regiao: int = None, skip: int = None, limit: int = Non
     return regioes
 
 
-@app.post("/search_indicadores", response_model=List[basicschemas.IndicadorBase], tags=['Front-end'])
+@app.post("/search_indicadores", response_model=List[schemas.IndicadorBaseFront], tags=['Front-end'])
 def post_search_indicador(search:schemas.SearchIndicador, skip: int = None, limit: int = None, db: Session= Depends(get_db)):
 
     response = dao.search_indicadores(db, search, skip, limit)
