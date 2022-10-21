@@ -3,7 +3,7 @@ from typing import List, Optional, Union
 from pydantic import BaseModel, validator, root_validator
 from datetime import datetime
 
-from .transformacoes import parse_formula, parse_fonte, html_sanitizer
+from .transformacoes import parse_formula, parse_fonte, html_sanitizer, padrao_nome_regiao, format_resultados_front
 
 from . import basic as basicschemas
 
@@ -12,6 +12,7 @@ class OrmBase(BaseModel):
     
     class Config:
         orm_mode = True
+
 
 class ConteudoBase(OrmBase):
 
@@ -23,15 +24,18 @@ class ConteudoBase(OrmBase):
     has_arq : bool = False
     has_img : bool = False
 
+
 class TipoConteudo(OrmBase):
 
     cd_tipo_conteudo : int
     sg_tipo_conteudo : str
     dc_tipo_conteudo : str
 
+
 class TipoConteudoFull(TipoConteudo):
 
     conteudos : List[ConteudoBase] = []
+
 
 class ConteudoReport(ConteudoBase):
 
@@ -49,11 +53,13 @@ class TemaBase(OrmBase):
     cd_tema : int
     nm_tema : str
 
+
 class IndicadorBaseFront(OrmBase):
 
     cd_indicador : int
     nm_indicador : str
     nm_completo_indicador : Optional[str] = None
+
 
 class FichaIndicador(OrmBase):
 
@@ -72,7 +78,7 @@ class FichaIndicador(OrmBase):
     tx_fonte_indicador : Optional[str] = None
     in_visibilidade : Optional[bool] = None
     temas : List[TemaBase]
-    resultados : List[basicschemas.ResultadoIndicador]
+    resultados : List
 
     @validator('dc_formula_indicador', always=True)
     def formula_validator(cls, v) -> Union[str, None]:
@@ -85,6 +91,14 @@ class FichaIndicador(OrmBase):
         if v is None:
             return ''
         return parse_fonte(v)
+
+    @validator('resultados', always=True)
+    def format_resultados(cls, v) -> List:
+        
+        if v is None:
+            return []
+        return format_resultados_front(v)
+
 
 class TemaFull(TemaBase):
 
