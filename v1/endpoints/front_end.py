@@ -33,13 +33,13 @@ def get_db():
 @app.get("/dashboards/", response_model=List[basicschemas.DashboardSimples], tags=['Front-end'])
 def read_dashboard(db: Session = Depends(get_db)):
 
-    dashs = basicdao.list_dash(db)
+    dashs = dao.list_dash(db)
     return dashs 
 
 @app.get("/dashboards/{cd_dashboard}", response_model=basicschemas.Dashboard,  tags=['Front-end'])
 def get_conteudo(cd_dashboard : int, db: Session = Depends(get_db)):
 
-    dash = basicdao.get_dashboard_full(db, cd_dashboard)
+    dash = dao.get_dashboard_full(db, cd_dashboard)
     if dash is None:
         raise HTTPException(status_code=404, detail=f"Dashboard {cd_dashboard} não Encontrado")
     
@@ -193,10 +193,10 @@ def dados_home():
     Esta sendo feito assim para permitir atualizacao dos dados na homepage posteriormente.'''
 
     dados = {
-        "pib": 2348338,
-        "populacaoSP": 12400000,
-        "areaSPKm": 1521,
-        "densidadeDemograficaKm": 7398
+        "pib": 763806,
+        "populacaoSP": 11914851,
+        "areaSPKm": 1527.69,
+        "densidadeDemograficaKm": 7799
         }
     
     return dados
