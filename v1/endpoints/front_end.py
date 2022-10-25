@@ -193,10 +193,10 @@ def dados_home():
     Esta sendo feito assim para permitir atualizacao dos dados na homepage posteriormente.'''
 
     dados = {
-        "pib": 2348338,
-        "populacaoSP": 12400000,
-        "areaSPKm": 1521,
-        "densidadeDemograficaKm": 7398
+        "pib": 763806,
+        "populacaoSP": 11914851,
+        "areaSPKm": 1527.69,
+        "densidadeDemograficaKm": 7799
         }
     
     return dados

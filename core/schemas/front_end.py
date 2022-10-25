@@ -129,7 +129,7 @@ class DadosHomePage(BaseModel):
 
     pib : int
     populacaoSP : int
-    areaSPKm : int
+    areaSPKm : float
     densidadeDemograficaKm : int
 
 
