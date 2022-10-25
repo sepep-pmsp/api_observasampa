@@ -9,6 +9,26 @@ from . import basic as basicdao
 
 from .filtros import get_lst_indicadores, sanitize_and_truncate
 
+def list_dash(db: Session):
+
+    model = basicmodels.Dashboard
+    query = db.query(model)
+    query=query.filter(model.in_publicado == 'S')
+    query=query.filter(model.cd_status_dashboard=='A')
+    query = query.order_by(model.dt_criacao.desc())
+
+    return query.all()
+
+def get_dashboard_full(db: Session, cd_gerenciador_dashboard:str):
+
+    model = basicmodels.Dashboard
+    query = db.query(model)
+    query = query.filter(model.cd_gerenciador_dashboard == cd_gerenciador_dashboard)
+    #garantir que vai mostrar só publicado, mesmo se o cara advinhe o codigo
+    query=query.filter(model.in_publicado == 'S')
+
+    return query.first()
+
 def list_tipos_conteudo(db: Session):
 
     model = models.TipoConteudo

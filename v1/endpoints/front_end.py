@@ -33,13 +33,13 @@ def get_db():
 @app.get("/dashboards/", response_model=List[basicschemas.DashboardSimples], tags=['Front-end'])
 def read_dashboard(db: Session = Depends(get_db)):
 
-    dashs = basicdao.list_dash(db)
+    dashs = dao.list_dash(db)
     return dashs 
 
 @app.get("/dashboards/{cd_dashboard}", response_model=basicschemas.Dashboard,  tags=['Front-end'])
 def get_conteudo(cd_dashboard : int, db: Session = Depends(get_db)):
 
-    dash = basicdao.get_dashboard_full(db, cd_dashboard)
+    dash = dao.get_dashboard_full(db, cd_dashboard)
     if dash is None:
         raise HTTPException(status_code=404, detail=f"Dashboard {cd_dashboard} não Encontrado")
     
