@@ -127,10 +127,8 @@ class SearchIndicador(BaseModel):
 
 class DadosHomePage(BaseModel):
 
-    pib : int
-    populacaoSP : int
-    areaSPKm : float
-    densidadeDemograficaKm : int
-
+    titulo : str
+    valor : str
+    fonte : str
 
 

@@ -187,17 +187,28 @@ def list_regioes(cd_nivel_regiao: int = None, skip: int = None, limit: int = Non
     regioes = basicdao.list_regioes(db, skip=skip, limit=limit)
     return regioes
 
-@app.get("/dados_home_page", response_model=schemas.DadosHomePage,  tags=['Front-end'])
+@app.get("/dados_home_page", response_model=List[schemas.DadosHomePage],  tags=['Front-end'])
 def dados_home():
     '''Mock endpoint que depois deve puxar os dados do banco.
     Esta sendo feito assim para permitir atualizacao dos dados na homepage posteriormente.'''
 
-    dados = {
-        "pib": 763806,
-        "populacaoSP": 11914851,
-        "areaSPKm": 1527.69,
-        "densidadeDemograficaKm": 7799
-        }
+    dados = [{
+        "titulo": "Produto Interno Bruto (P.I.B.) 2019 (1.000.000,00 R$)",
+        "valor": "2.348.338",
+        "fonte": "IBGE"
+        },
+        {  "titulo": "População de São Paulo 2020",
+        "valor": "12,4 milhões",
+        "fonte": "IBGE"
+        },
+        {  "titulo": "Área da cidade de São Paulo",
+        "valor": "1.521 km²",
+        "fonte": "IBGE"
+        },
+        {  "titulo": "Densidade Demográfica",
+        "valor": "7.398 hab/km²",
+        "fonte": "IBGE"
+        }]
     
     return dados
 
