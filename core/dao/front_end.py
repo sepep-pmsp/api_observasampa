@@ -15,7 +15,7 @@ def list_dash(db: Session):
     query = db.query(model)
     query=query.filter(model.in_publicado == 'S')
     query=query.filter(model.cd_status_dashboard=='A')
-    query = query.order_by(model.dt_criacao.desc())
+    query = query.order_by(model.nr_ordem_exibicao)
 
     return query.all()
 

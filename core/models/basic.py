@@ -36,7 +36,7 @@ class Dashboard(Base):
     dc_dashboard = Column(String) 
     link_dashboard = Column(String)
     aq_icone_gerenciador_dashboard = Column(String)
-    nr_ordem_exibicao = Column(String)
+    nr_ordem_exibicao = Column(Integer)
     dt_criacao = Column(String)
     cd_status_dashboard = Column(String)
     in_publicado = Column(String)
