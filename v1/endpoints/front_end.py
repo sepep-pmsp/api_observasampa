@@ -193,20 +193,23 @@ def dados_home():
     Esta sendo feito assim para permitir atualizacao dos dados na homepage posteriormente.'''
 
     dados = [{
-        "titulo": "Produto Interno Bruto (P.I.B.) 2019 (1.000.000,00 R$)",
-        "valor": "2.348.338",
+        "titulo": "População (2021)",
+        "valor": "11.914.851 habitantes",
+        "fonte": "SEADE"
+        },
+        {
+        "titulo": "Produto Interno Bruto (2019) ",
+        "valor": "R$ 763,8 bilhões",
         "fonte": "IBGE"
         },
-        {  "titulo": "População de São Paulo 2020",
-        "valor": "12,4 milhões",
-        "fonte": "IBGE"
+        {
+        "titulo": "Área do Município",
+        "valor": "1.527,69 km²",
+        "fonte": "SMUL/PMSP"
         },
-        {  "titulo": "Área da cidade de São Paulo",
-        "valor": "1.521 km²",
-        "fonte": "IBGE"
-        },
-        {  "titulo": "Densidade Demográfica",
-        "valor": "7.398 hab/km²",
+        {
+        "titulo": "Participação no PIB do Brasil (2019)",
+        "valor": "10,3%",
         "fonte": "IBGE"
         }]
     
