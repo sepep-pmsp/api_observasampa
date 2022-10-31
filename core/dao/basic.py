@@ -57,7 +57,8 @@ def list_temas(db: Session):
     model = basicmodels.Tema
     query = db.query(model)
     query = query.filter(model.cd_tipo_situacao==1)
-
+    query = query.order_by(model.nm_tema)
+    
     return query.all()
 
 def get_tema_por_nome(db: Session, nm_tema:str):
