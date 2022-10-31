@@ -125,6 +125,12 @@ class SearchIndicador(BaseModel):
     cd_niveis_regionais : List[int] = None
     cd_regioes : List[int] = None
 
+class SearchResultadosIndicador(BaseModel):
+
+    cd_indicador : int
+    cd_niveis_regionais : List[int] = None
+    cd_regioes : List[int] = None
+
 class DadosHomePage(BaseModel):
 
     titulo : str
