@@ -202,3 +202,36 @@ def search_indicadores(db: Session, search : schemas.SearchIndicador, skip: int 
         query = query.offset(skip).limit(limit)
 
     return query.all()
+
+def search_resultados_indicador(db: Session, search: schemas.SearchResultadosIndicador,
+                        skip: int = None, limit: int = None):
+
+    cd_indicador = search.cd_indicador
+
+    model = basicmodels.ResultadoIndicador
+    query = db.query(model)
+    query = query.filter(model.cd_tipo_situacao==1)
+    query = query.filter(model.cd_indicador==cd_indicador)
+
+    niveis_regionais = search.cd_niveis_regionais
+    if niveis_regionais:
+
+        model_regiao = basicmodels.Regiao
+        query_aux = db.query(model_regiao)
+        query_aux = query_aux.filter(model_regiao.cd_nivel_regiao.in_(niveis_regionais))
+        cd_regioes = [r.cd_regiao for r in query_aux.all()]
+
+        query = query.filter(model.cd_regiao.in_(cd_regioes))
+    
+    regioes = search.cd_regioes
+    if regioes:
+
+        query = query.filter(model.cd_regiao.in_(regioes))
+
+
+    if skip or limit:
+        skip = skip or 0
+        limit = limit or 100
+        query = query.offset(skip).limit(limit)
+
+    return query.all()
