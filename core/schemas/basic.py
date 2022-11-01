@@ -37,6 +37,13 @@ class DashboardFile(Dashboard):
 
     aq_icone_gerenciador_dashboard : str
 
+class DashboardCarrossel(DashboardSimples):
+
+    dc_dashboard : Union[str, None] = None 
+    link_dashboard : str
+    nr_ordem_exibicao : str
+    link_img : str
+
 
 class IndicadorBase(OrmBase):
 

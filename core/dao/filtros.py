@@ -71,6 +71,12 @@ def get_lst_indicadores(query):
 
     return [indi.cd_indicador for indi in query.all()]
 
+def image_dashboard(r):
+
+    img = r.aq_icone_gerenciador_dashboard
+    io = BytesIO(img)
+
+    return io
 
 def image_conteudo(r):
 

@@ -15,7 +15,7 @@ from core.schemas import front_end as schemas
 from core.schemas import basic as basicschemas
 from core.models.database import SessionLocal, engine
 
-from core.dao.filtros import siglas_tipo_conteudo, arquivo_conteudo, image_conteudo, icone_tema
+from core.dao.filtros import siglas_tipo_conteudo, arquivo_conteudo, image_conteudo, icone_tema, image_dashboard
 
 
 app = APIRouter()
@@ -43,7 +43,28 @@ def get_conteudo(cd_dashboard : int, db: Session = Depends(get_db)):
     if dash is None:
         raise HTTPException(status_code=404, detail=f"Dashboard {cd_dashboard} não Encontrado")
     
-    return dash       
+    return dash 
+
+@app.get("/dashboards/{cd_dashboard}/imagem", tags=['Front-end'], 
+        response_class=StreamingResponse)
+def img_dashboard(cd_dashboard : int, db: Session = Depends(get_db)):
+
+
+    dash = dao.get_dashboard_full(db, cd_gerenciador_dashboard=cd_dashboard)
+    if dash is None:
+        raise HTTPException(status_code=404, detail=f"Dashboard {cd_dashboard} não Encontrado")
+    elif not dash.aq_icone_gerenciador_dashboard:
+        raise HTTPException(status_code=404, detail=f"Dashboard {cd_dashboard} não possui imagem")
+
+    io = image_dashboard(dash)
+
+    response = StreamingResponse(iter([io.getvalue()]),
+                            media_type="image/png"
+       )
+    
+    #response.headers["Content-Disposition"] = f"attachment; filename=dashboard_{conteudo.cd_conteudo}.png"
+
+    return response      
 
 @app.get("/tipo_conteudo/", response_model=List[schemas.TipoConteudo], tags=['Front-end'])
 def read_tipo_conteudos(db: Session = Depends(get_db)):
