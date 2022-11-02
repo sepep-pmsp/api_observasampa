@@ -7,7 +7,7 @@ from ..schemas import front_end as schemas
 from ..schemas import basic as basicschemas
 from . import basic as basicdao
 
-from .filtros import get_lst_indicadores, sanitize_and_truncate
+from .filtros import get_lst_indicadores, sanitize_and_truncate, format_resultados_front
 
 def list_dash(db: Session):
 
@@ -244,4 +244,7 @@ def search_resultados_indicador(db: Session, search: schemas.SearchResultadosInd
         limit = limit or 100
         query = query.offset(skip).limit(limit)
 
-    return query.all()
+    r = query.all()
+    r = format_resultados_front(r)
+
+    return r

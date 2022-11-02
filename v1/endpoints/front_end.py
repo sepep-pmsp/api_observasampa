@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Query
 
-from typing import List, Union
+from typing import List, Union, Dict
 
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -256,7 +256,7 @@ def post_search_indicador(search:schemas.SearchIndicador, skip: int = None, limi
 
     return response
 
-@app.post("/search_resultados_indicador", response_model=List[basicschemas.ResultadoIndicador], tags=['Front-end'])
+@app.post("/search_resultados_indicador", response_model=Dict, tags=['Front-end'])
 def post_search_indicador(search:schemas.SearchResultadosIndicador, skip: int = None, limit: int = None, db: Session= Depends(get_db)):
 
     response = dao.search_resultados_indicador(db, search, skip, limit)

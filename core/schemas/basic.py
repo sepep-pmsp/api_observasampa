@@ -17,34 +17,6 @@ class TemaSimples(OrmBase):
     nm_tema :  Union[str, None] = None
     dc_tema :  Union[str, None] = None
 
-class DashboardSimples(OrmBase):
-
-    cd_gerenciador_dashboard : int
-    tema : Union[TemaSimples, None] = None
-    nm_titulo_dashboard : str
-
-class Dashboard(DashboardSimples):
-
-    dc_dashboard : Union[str, None] = None 
-    link_dashboard : str
-    nr_ordem_exibicao : str
-    dt_criacao : datetime
-    cd_status_dashboard : str
-    in_publicado : str
-
-
-class DashboardFile(Dashboard):
-
-    aq_icone_gerenciador_dashboard : str
-
-class DashboardCarrossel(DashboardSimples):
-
-    dc_dashboard : Union[str, None] = None 
-    link_dashboard : str
-    nr_ordem_exibicao : str
-    link_img : str
-
-
 class IndicadorBase(OrmBase):
 
     cd_indicador : int
