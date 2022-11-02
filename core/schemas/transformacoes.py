@@ -49,13 +49,15 @@ def parse_fonte(fonte):
 def html_sanitizer(v):
 
     soup = BeautifulSoup(v)
-    allowed = {'h1', 'h2', 'h3', 'h4', 'hr', 'p', 'a', 'table', 'td', 'tr', 'th'}
+    allowed = {'h1', 'h2', 'h3', 'h4', 'h5', 'hr', 'p', 'a', 'table', 'td', 'tr', 'th',
+                'b', 'i', 'span', 'br', 'a'}
+    allowed_attr = {'name', 'href'}
     for tag in soup.find_all(name=True):
         if tag.name not in allowed:
             tag.name = 'p'
         attrs = list(tag.attrs.keys())
         for attribute in attrs:
-            if attribute != 'name':
+            if attribute not in allowed_attr:
                 del tag[attribute]
 
     return soup.prettify()
