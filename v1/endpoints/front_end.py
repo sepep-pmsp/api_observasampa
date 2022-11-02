@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Query
 
-from typing import List, Union
+from typing import List, Union, Dict
 
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
@@ -15,7 +15,7 @@ from core.schemas import front_end as schemas
 from core.schemas import basic as basicschemas
 from core.models.database import SessionLocal, engine
 
-from core.dao.filtros import siglas_tipo_conteudo, arquivo_conteudo, image_conteudo, icone_tema
+from core.dao.filtros import siglas_tipo_conteudo, arquivo_conteudo, image_conteudo, icone_tema, image_dashboard
 
 
 app = APIRouter()
@@ -30,20 +30,54 @@ def get_db():
     finally:
         db.close()
 
-@app.get("/dashboards/", response_model=List[basicschemas.DashboardSimples], tags=['Front-end'])
+@app.get("/dashboards/", response_model=List[schemas.DashboardSimples], tags=['Front-end'])
 def read_dashboard(db: Session = Depends(get_db)):
 
     dashs = dao.list_dash(db)
     return dashs 
 
-@app.get("/dashboards/{cd_dashboard}", response_model=basicschemas.Dashboard,  tags=['Front-end'])
+@app.get("/dashboards/{cd_dashboard}", response_model=schemas.Dashboard,  tags=['Front-end'])
 def get_conteudo(cd_dashboard : int, db: Session = Depends(get_db)):
 
     dash = dao.get_dashboard_full(db, cd_dashboard)
     if dash is None:
         raise HTTPException(status_code=404, detail=f"Dashboard {cd_dashboard} não Encontrado")
     
-    return dash       
+    return dash 
+
+@app.get("/dashboards/{cd_dashboard}/imagem", tags=['Front-end'], 
+        response_class=StreamingResponse)
+def img_dashboard(cd_dashboard : int, db: Session = Depends(get_db)):
+
+
+    dash = dao.get_dashboard_full(db, cd_gerenciador_dashboard=cd_dashboard)
+    if dash is None:
+        raise HTTPException(status_code=404, detail=f"Dashboard {cd_dashboard} não Encontrado")
+    elif not dash.aq_icone_gerenciador_dashboard:
+        raise HTTPException(status_code=404, detail=f"Dashboard {cd_dashboard} não possui imagem")
+
+    io = image_dashboard(dash)
+
+    response = StreamingResponse(iter([io.getvalue()]),
+                            media_type="image/png"
+       )
+    
+    #se quiser retornar como download descomenta abaixo
+    #response.headers["Content-Disposition"] = f"attachment; filename=dashboard_{dash.cd_gerenciador_dashboard}.png"
+
+    return response   
+
+@app.get("/carrossel/", response_model=List[schemas.DashboardCarrossel], tags=['Front-end'])
+def read_dashboard(db: Session = Depends(get_db)):
+
+    dashs = dao.list_dash_carrossel(db)
+
+    for dash in dashs:
+        #achar uma maneira de inspecionar o endpoint direto
+        link_img = app.url_path_for('img_dashboard', cd_dashboard=dash.cd_gerenciador_dashboard)
+        dash.__setattr__('link_img', link_img)
+
+    return dashs    
 
 @app.get("/tipo_conteudo/", response_model=List[schemas.TipoConteudo], tags=['Front-end'])
 def read_tipo_conteudos(db: Session = Depends(get_db)):
@@ -222,7 +256,7 @@ def post_search_indicador(search:schemas.SearchIndicador, skip: int = None, limi
 
     return response
 
-@app.post("/search_resultados_indicador", response_model=List[basicschemas.ResultadoIndicador], tags=['Front-end'])
+@app.post("/search_resultados_indicador", response_model=Dict, tags=['Front-end'])
 def post_search_indicador(search:schemas.SearchResultadosIndicador, skip: int = None, limit: int = None, db: Session= Depends(get_db)):
 
     response = dao.search_resultados_indicador(db, search, skip, limit)

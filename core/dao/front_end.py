@@ -7,7 +7,7 @@ from ..schemas import front_end as schemas
 from ..schemas import basic as basicschemas
 from . import basic as basicdao
 
-from .filtros import get_lst_indicadores, sanitize_and_truncate
+from .filtros import get_lst_indicadores, sanitize_and_truncate, format_resultados_front
 
 def list_dash(db: Session):
 
@@ -28,6 +28,16 @@ def get_dashboard_full(db: Session, cd_gerenciador_dashboard:str):
     query=query.filter(model.in_publicado == 'S')
 
     return query.first()
+
+def list_dash_carrossel(db: Session):
+
+    model = basicmodels.Dashboard
+    query = db.query(model)
+    query=query.filter(model.in_publicado == 'S')
+    query=query.filter(model.cd_status_dashboard=='A')
+    query = query.order_by(model.nr_ordem_exibicao)
+
+    return query.limit(5).all()
 
 def list_tipos_conteudo(db: Session):
 
@@ -234,4 +244,7 @@ def search_resultados_indicador(db: Session, search: schemas.SearchResultadosInd
         limit = limit or 100
         query = query.offset(skip).limit(limit)
 
-    return query.all()
+    r = query.all()
+    r = format_resultados_front(r)
+
+    return r

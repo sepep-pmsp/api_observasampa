@@ -71,6 +71,12 @@ def get_lst_indicadores(query):
 
     return [indi.cd_indicador for indi in query.all()]
 
+def image_dashboard(r):
+
+    img = r.aq_icone_gerenciador_dashboard
+    io = BytesIO(img)
+
+    return io
 
 def image_conteudo(r):
 
@@ -155,3 +161,26 @@ def sanitize_and_truncate(v, max_chars):
             break
     
     return ' '.join(txt)
+
+def format_resultados_front(resultados):
+
+    formatados = {}
+    for r in resultados:
+        nivel = r.regiao.nivel.dc_nivel_regiao
+        regiao = r.regiao.nm_regiao
+        #titlecase para ficar mais bonito
+        regiao = str(regiao).title()
+        periodo = r.periodo.vl_periodo
+        valor = r.vl_indicador_resultado
+
+        if nivel not in formatados:
+            formatados[nivel] = {}
+        if regiao not in formatados[nivel]:
+            formatados[nivel][regiao] = {}
+        
+        #se tirver mais de um valor por regiao por periodo
+        #vai pegar o ultimo, o que sinceramente ateh eh bom
+        #porque nao deveria ter mais de um valor
+        formatados[nivel][regiao][periodo] = valor
+    
+    return formatados
