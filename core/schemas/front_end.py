@@ -60,6 +60,33 @@ class IndicadorBaseFront(OrmBase):
     nm_indicador : str
     nm_completo_indicador : Optional[str] = None
 
+class DashboardSimples(OrmBase):
+
+    cd_gerenciador_dashboard : int
+    tema : Union[basicschemas.TemaSimples, None] = None
+    nm_titulo_dashboard : str
+
+class Dashboard(DashboardSimples):
+
+    dc_dashboard : Union[str, None] = None 
+    link_dashboard : str
+    nr_ordem_exibicao : str
+    dt_criacao : datetime
+    cd_status_dashboard : str
+    in_publicado : str
+
+
+class DashboardFile(Dashboard):
+
+    aq_icone_gerenciador_dashboard : str
+
+class DashboardCarrossel(OrmBase):
+
+    nm_titulo_dashboard : str
+    dc_dashboard : Union[str, None] = None 
+    link_dashboard : str
+    link_img : str
+
 
 class FichaIndicador(OrmBase):
 

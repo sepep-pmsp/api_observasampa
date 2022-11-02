@@ -29,6 +29,16 @@ def get_dashboard_full(db: Session, cd_gerenciador_dashboard:str):
 
     return query.first()
 
+def list_dash_carrossel(db: Session):
+
+    model = basicmodels.Dashboard
+    query = db.query(model)
+    query=query.filter(model.in_publicado == 'S')
+    query=query.filter(model.cd_status_dashboard=='A')
+    query = query.order_by(model.nr_ordem_exibicao)
+
+    return query.limit(5).all()
+
 def list_tipos_conteudo(db: Session):
 
     model = models.TipoConteudo
