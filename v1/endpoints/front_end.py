@@ -128,7 +128,8 @@ def img_conteudo(cd_conteudo : int, db: Session = Depends(get_db)):
                             media_type="image/png"
        )
     
-    response.headers["Content-Disposition"] = f"attachment; filename=conteudo_{conteudo.cd_conteudo}.png"
+    #se quiser retornar como download
+    #response.headers["Content-Disposition"] = f"attachment; filename=conteudo_{conteudo.cd_conteudo}.png"
 
     return response
 
