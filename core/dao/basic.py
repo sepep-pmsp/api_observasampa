@@ -1,7 +1,6 @@
 from sqlalchemy.orm import Session
 
 from ..models import basic as basicmodels
-from ..schemas import basic as basicschemas
 
 from .filtros import resultados_por_nivel_cd, paginar_resultados
 
