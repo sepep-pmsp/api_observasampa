@@ -117,7 +117,7 @@ def list_niveis_regioes(db: Session):
     query = db.query(model)
     #Nivel regiao nao tem tipo de situacao
     #query = query.filter(model.cd_tipo_situacao==1)
-
+    query = query.order_by(model.cd_nivel_regiao)
     return query.all()
 
 def get_nivel_regiao(db: Session, cd_nivel_regiao: int):
