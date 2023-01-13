@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 
 from fastapi.responses import StreamingResponse
 
+from core.dao import get_db
 from core.dao import front_end as dao
 from core.dao import basic as basicdao
 from core.models import front_end as models
@@ -22,13 +23,6 @@ app = APIRouter()
 
 TIPOS_CONTEUDO = siglas_tipo_conteudo()
 
-# Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 @app.get("/dashboards/", response_model=List[schemas.DashboardSimples], tags=['Front-end'])
 def read_dashboard(db: Session = Depends(get_db)):
@@ -164,7 +158,6 @@ def arq_conteudo(cd_conteudo : int, db: Session = Depends(get_db)):
 def ficha_indicador(cd_indicador: int, db: Session = Depends(get_db)):
 
     indicador = dao.get_ficha_indicador(db, cd_indicador=cd_indicador)
-    print(indicador.tx_fonte_indicador)
     if indicador is None:
         raise HTTPException(status_code=404, detail=f"Indicador {cd_indicador} Não Encontrado")
     return indicador
