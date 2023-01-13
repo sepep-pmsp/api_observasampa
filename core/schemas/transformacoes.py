@@ -3,6 +3,8 @@ from json import JSONDecodeError
 from bs4 import BeautifulSoup
 
 from ..utils.data_munging import remover_acentos
+from ..dao import get_db_obj
+from ..dao.basic import get_variavel
 
 def padrao_nome_regiao(nome):
 
@@ -28,6 +30,21 @@ def parse_formula(formula):
         if formula is None:
             return ''
     return str(formula)
+
+def get_var_names(formula):
+
+    db = get_db_obj()
+    formula_nova = []
+    for item in formula.split(' '):
+        if item.lower().startswith('v'):
+            var_obj = get_variavel(db, nm_resumido_variavel=item)
+            item = var_obj.nm_completo_variavel
+            #envelopa em aspas simples
+            item = f"'{item}'"
+        formula_nova.append(item)
+
+    db.close()
+    return ' '.join(formula_nova)
 
 def parse_fonte(fonte):
 
