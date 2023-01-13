@@ -3,7 +3,8 @@ from typing import List, Optional, Union
 from pydantic import BaseModel, validator, root_validator
 from datetime import datetime
 
-from .transformacoes import parse_formula, parse_fonte, html_sanitizer, padrao_nome_regiao, format_resultados_front
+from .transformacoes import (parse_formula, parse_fonte, html_sanitizer, padrao_nome_regiao, 
+                            format_resultados_front, get_var_names)
 
 from . import basic as basicschemas
 
@@ -111,7 +112,11 @@ class FichaIndicador(OrmBase):
     def formula_validator(cls, v) -> Union[str, None]:
         if v is None:
             return ''
-        return parse_formula(v)
+        formula = parse_formula(v)
+        formula = get_var_names(formula)
+
+        return formula
+
     @validator('tx_fonte_indicador', always=True)
     def fonte_validator(cls, v) -> Union[str, None]:
         
@@ -132,17 +137,31 @@ class TemaFull(TemaBase):
     dc_tema : str
     aq_icone_tema : Optional[str] = None
 
+
 #note que esse nao é ORM
-class Institucional(BaseModel):
+class Secao(BaseModel):
 
-    titulo : str
-    resumo : str
-    txt_completo : str
+    title: str
+    body: str
 
-    @validator('txt_completo', always=True)
+    @validator('body', always=True)
     def sanitize(cls, v) -> str:
         if v:
             return html_sanitizer(v)
+
+#note que esse nao é ORM
+class Institucional(BaseModel):
+
+    sections : List[Secao]
+    footer: str
+
+
+    @validator('footer', always=True)
+    def sanitize(cls, v) -> str:
+        if v:
+            return html_sanitizer(v)
+
+   
 
 
 class SearchIndicador(BaseModel):

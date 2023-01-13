@@ -6,7 +6,7 @@ from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from core.dao import basic as basicdao
-from core.dao import filtros
+from core.dao import filtros, get_db
 from core.models import basic as basicmodels
 from core.schemas import basic as basicschemas
 from core.models.database import SessionLocal, engine
@@ -14,14 +14,6 @@ from core.models.database import SessionLocal, engine
 basicmodels.Base.metadata.create_all(bind=engine)
 
 app = APIRouter()
-
-# Dependency
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 NIVEIS_REGIOES = filtros.nomes_niveis()
 TEMAS = filtros.nomes_temas()
