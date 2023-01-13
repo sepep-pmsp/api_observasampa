@@ -4,7 +4,6 @@ from sqlalchemy import distinct
 from ..models import front_end as models
 from ..models import basic as basicmodels
 from ..schemas import front_end as schemas
-from ..schemas import basic as basicschemas
 from . import basic as basicdao
 
 from .filtros import get_lst_indicadores, sanitize_and_truncate, format_resultados_front
@@ -123,6 +122,8 @@ def get_txt_institucional(db: Session):
 def get_ficha_indicador(db: Session, cd_indicador: int):
 
     indicador = basicdao.get_indicador(db, cd_indicador)
+    if indicador is None:
+        return None
     resultados = basicdao.resultados_indicador(db, cd_indicador)
 
     indicador.__setattr__('resultados', resultados)
