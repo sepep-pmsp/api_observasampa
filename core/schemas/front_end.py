@@ -137,17 +137,31 @@ class TemaFull(TemaBase):
     dc_tema : str
     aq_icone_tema : Optional[str] = None
 
+
 #note que esse nao é ORM
-class Institucional(BaseModel):
+class Secao(BaseModel):
 
-    titulo : str
-    resumo : str
-    txt_completo : str
+    title: str
+    body: str
 
-    @validator('txt_completo', always=True)
+    @validator('body', always=True)
     def sanitize(cls, v) -> str:
         if v:
             return html_sanitizer(v)
+
+#note que esse nao é ORM
+class Institucional(BaseModel):
+
+    sections : List[Secao]
+    footer: str
+
+
+    @validator('footer', always=True)
+    def sanitize(cls, v) -> str:
+        if v:
+            return html_sanitizer(v)
+
+   
 
 
 class SearchIndicador(BaseModel):

@@ -103,19 +103,35 @@ def get_arq_tema(db: Session, cd_tema: int):
 
     return query.first()
 
+
+def get_param_sistema(db: Session, param_type:str):
+
+    tipos = {'equipe' : 'TX_MD_INSTITUCIONAL_TITULO',
+            'footer' : 'TX_MD_INSTITUCIONAL_RESUMO',
+            'institucional' : 'TX_MD_INSTITUCIONAL_COMPLETO'}
+
+    chave = tipos[param_type]
+    model = models.ParametrosSistema
+    query = db.query(model)
+
+    query = query.filter(model.cd_chave_parametro==chave)
+    r = query.first()
+
+    return r.vl_chave_parametro
+
 def get_txt_institucional(db: Session):
 
-    dados = {'titulo' : 'TX_MD_INSTITUCIONAL_TITULO',
-            'resumo' : 'TX_MD_INSTITUCIONAL_RESUMO',
-            'txt_completo' : 'TX_MD_INSTITUCIONAL_COMPLETO'}
-    model = models.ParametrosSistema
-
-    for attr_name, cd_chave in dados.items():
-        query = db.query(model)
-        query = query.filter(model.cd_chave_parametro==cd_chave)
-        r = query.first()
-
-        dados[attr_name] = r.vl_chave_parametro
+    dados = {
+    "sections" : [
+            {"title" : "<h2>ObservaSampa</h2>",
+            "body" : get_param_sistema(db, 'institucional')
+        },
+            {"title" : "<h2>Equipe>/h2>",
+            "body" : get_param_sistema(db, 'equipe')
+        }
+        ],
+    "footer" : get_param_sistema(db, 'footer')
+    }
 
     return dados
 
