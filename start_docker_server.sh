@@ -6,6 +6,13 @@ sudo docker rm $(docker ps -a -q)
 #pull new commits
 git pull
 
+#setar variavel de ambiente
+if [ x"${ENV}" == "homolog" ]; then 
+     git checkout homolog
+  else
+     git checkout main
+fi
+
 #build image
 sudo docker build -t api_observa .
 
