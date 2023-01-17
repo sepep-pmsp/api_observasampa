@@ -17,8 +17,10 @@ fi
 
 
 if [ x"${ENV}" == "homolog" ]; then 
+     echo "checking out homolog"
      git checkout homolog
   else
+     echo "checking out main"
      git checkout main
 fi
 
