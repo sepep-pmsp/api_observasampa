@@ -7,6 +7,15 @@ sudo docker rm $(docker ps -a -q)
 git pull
 
 #setar variavel de ambiente
+if [ -f ".env" ]; then
+    echo "loading .env"
+    source .env
+else
+    echo ".env does not exist. please update it!"
+    exit;
+fi
+
+
 if [ x"${ENV}" == "homolog" ]; then 
      git checkout homolog
   else
