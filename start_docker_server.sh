@@ -18,7 +18,8 @@ fi
  source .env
  echo "$ENV"
 
-if [ "${ENV}"=="homolog" ]; then 
+if [ ${ENV}==homolog ]
+  then 
      echo "checking out homolog"
      git fetch origin homolog
      git pull
