@@ -14,6 +14,7 @@ else
 fi
 
  source .env
+ echo "$ENV"
 
 if [ x"${ENV}"=="homolog" ]; then 
      echo "checking out homolog"
