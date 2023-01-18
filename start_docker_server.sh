@@ -16,6 +16,7 @@ else
 fi
 
 source ./.env
+echo "Building environtment:";
 echo $ENV;
 if [[ $ENV = "homolog" ]]
 then
