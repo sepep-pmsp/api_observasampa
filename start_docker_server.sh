@@ -23,7 +23,7 @@ then
   git fetch origin homolog
 else
   echo "checking out main"
-  git fetch origin homolog
+  git fetch origin main
 fi
 
 #build image
