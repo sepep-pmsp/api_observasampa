@@ -18,17 +18,15 @@ fi
  source .env
  echo "$ENV"
 
-if [ $ENV==homolog ]
+if [[ $ENV=homolog ]]
   then 
      echo "checking out homolog"
      git fetch origin homolog
-     git pull
-     git checkout homolog
+
   else
      echo "checking out main"
      git fetch origin main
-     git pull
-     git checkout main
+
 fi
 
 #build image
