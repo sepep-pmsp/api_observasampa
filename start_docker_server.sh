@@ -15,18 +15,15 @@ else
     cp .env.example .env
 fi
 
- source .env
- echo "$ENV"
-
-if [[ $ENV="homolog" ]]
-  then 
-     echo "checking out homolog"
-     git fetch origin homolog
-
-  else
-     echo "checking out main"
-     git fetch origin main
-
+source ./.env
+echo $ENV;
+if [[ $ENV = "homolog" ]]
+then
+  echo "checking out homolog"
+  git fetch origin homolog
+else
+  echo "checking out main"
+  git fetch origin homolog
 fi
 
 #build image
