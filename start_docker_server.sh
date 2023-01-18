@@ -7,12 +7,13 @@ sudo docker rm $(docker ps -a -q)
 #setar variavel de ambiente
 if [ -f ".env" ]; then
     echo "loading .env"
-    source .env
+   
 else
     echo ".env does not exist. copying example!"
     cp .env.example .env
 fi
 
+ source .env
 
 if [ x"${ENV}"=="homolog" ]; then 
      echo "checking out homolog"
