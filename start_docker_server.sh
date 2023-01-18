@@ -11,7 +11,8 @@ if [ -f ".env" ]; then
     echo "loading .env"
     source .env
 else
-    echo ".env does not exist. please update it!"
+    echo ".env does not exist. copying example!"
+    cp .env.example .env
     exit;
 fi
 
