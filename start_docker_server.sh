@@ -3,8 +3,6 @@ sudo docker stop $(docker ps -a -q)
 #remove container
 sudo docker rm $(docker ps -a -q)
 
-#pull new commits
-git pull
 
 #setar variavel de ambiente
 if [ -f ".env" ]; then
@@ -18,9 +16,13 @@ fi
 
 if [ x"${ENV}" == "homolog" ]; then 
      echo "checking out homolog"
+     git fetch origin homolog
+     git pull
      git checkout homolog
   else
      echo "checking out main"
+     git fetch origin main
+     git pull
      git checkout main
 fi
 
