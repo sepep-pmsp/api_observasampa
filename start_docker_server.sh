@@ -14,7 +14,7 @@ else
 fi
 
 
-if [ x"${ENV}" == "homolog" ]; then 
+if [ x"${ENV}"=="homolog" ]; then 
      echo "checking out homolog"
      git fetch origin homolog
      git pull
