@@ -13,7 +13,6 @@ if [ -f ".env" ]; then
 else
     echo ".env does not exist. copying example!"
     cp .env.example .env
-    exit;
 fi
 
 
