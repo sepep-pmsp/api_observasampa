@@ -1,3 +1,5 @@
+#! /bin/bash
+
 #stop container
 sudo docker stop $(docker ps -a -q)
 #remove container
@@ -16,7 +18,7 @@ fi
  source .env
  echo "$ENV"
 
-if [ x"${ENV}"=="homolog" ]; then 
+if [ "${ENV}"=="homolog" ]; then 
      echo "checking out homolog"
      git fetch origin homolog
      git pull
