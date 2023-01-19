@@ -1,5 +1,6 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import distinct
+from sqlalchemy import func
 
 from ..models import front_end as models
 from ..models import basic as basicmodels
@@ -147,9 +148,11 @@ def get_ficha_indicador(db: Session, cd_indicador: int):
     return indicador
 
 def search_indicador_nome(db: Session, query, nom_substring : str):
-    
+
+    nom_substring = nom_substring.lower().strip()
+
     model = basicmodels.Indicador
-    query = query.filter(model.nm_indicador.contains(nom_substring))
+    query = query.filter(func.lower(model.nm_indicador).contains(nom_substring))
 
     return query
 
