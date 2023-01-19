@@ -33,8 +33,6 @@ app = FastAPI(openapi_url="/",
     )
 
 
-REQUEST_TIMEOUT_ERROR = 0.000001
-
 #middleware to handle timeouts
 @app.middleware("http")
 async def timeout_middleware(request: Request, call_next):
