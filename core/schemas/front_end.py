@@ -89,6 +89,13 @@ class DashboardCarrossel(OrmBase):
     link_img : str
 
 
+class FichaVariavel(basicschemas.VariavelBase):
+    
+    nm_completo_variavel : Union[str, None] = None
+    dc_serie_historica : Union[str, None] = None
+    tx_fonte_variavel : Union[str, None] = None
+    dc_nota_tecnica : Union[str, None] = None
+
 class FichaIndicador(OrmBase):
 
     cd_indicador : int
@@ -106,6 +113,7 @@ class FichaIndicador(OrmBase):
     tx_fonte_indicador : Optional[str] = None
     in_visibilidade : Optional[bool] = None
     temas : List[TemaBase]
+    variaveis : List[FichaVariavel]
     resultados : List
 
     @validator('dc_formula_indicador', always=True)

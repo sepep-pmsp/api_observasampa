@@ -11,6 +11,14 @@ tema_indicador = Table(
     Column('cd_tipo_situacao', String)
 )
 
+variavel_indicador = Table(
+    "variavel_indicador",
+    metadata,
+    Column("cd_indicador", ForeignKey("indicador.cd_indicador")),
+    Column("cd_variavel", ForeignKey("variavel.cd_variavel")),
+)
+
+
 class Tema(Base):
     __tablename__ = "tema"
     metadata = metadata
@@ -62,6 +70,7 @@ class Indicador(Base):
     in_visibilidade = Column(Boolean)
     resultados = relationship("ResultadoIndicador")
     temas = relationship("Tema", secondary=tema_indicador)
+    variaveis = relationship("Variavel", secondary=variavel_indicador)
 
     cd_tipo_situacao = Column(Integer)
 
@@ -134,7 +143,7 @@ class Variavel(Base):
     tx_fonte_variavel = Column(String)
     dc_nota_tecnica = Column(String)
     resultados = relationship("ResultadoVariavel", back_populates="variavel")
-
+    indicadores = relationship("Indicador", secondary=variavel_indicador, back_populates="variaveis")
     cd_tipo_situacao = Column(Integer)
 
 class ResultadoVariavel(Base):
