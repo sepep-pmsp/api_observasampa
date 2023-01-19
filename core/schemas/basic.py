@@ -26,6 +26,12 @@ class TemaReport(TemaSimples):
 
     indicadores : List[IndicadorBase] = []
 
+
+class VariavelBase(OrmBase):
+
+    cd_variavel : int
+    nm_resumido_variavel : Union[str, None] = None
+
 class IndicadorReport(IndicadorBase):
 
     dc_conceito_indicador : Union[str, None] = None
@@ -35,6 +41,7 @@ class IndicadorReport(IndicadorBase):
     tx_fonte_indicador : Union[str, None] = None
     in_visibilidade : bool
     temas : List[TemaSimples] = []
+    variaveis: List[VariavelBase] = []
 
 
 class NivelRegiao(OrmBase):
@@ -87,10 +94,6 @@ class RegiaoResultado(Regiao):
 
     resultados : List[ResultadoIndicador] = []
 
-class VariavelBase(OrmBase):
-
-    cd_variavel : int
-    nm_resumido_variavel : Union[str, None] = None
 
 class VariavelReport(VariavelBase):
     
@@ -98,6 +101,7 @@ class VariavelReport(VariavelBase):
     dc_serie_historica : Union[str, None] = None
     tx_fonte_variavel : Union[str, None] = None
     dc_nota_tecnica : Union[str, None] = None
+    indicadores: List[IndicadorBase] = []
 
 class ResultadoVariavel(OrmBase):
 
