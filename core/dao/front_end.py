@@ -127,7 +127,7 @@ def get_txt_institucional(db: Session):
             {"title" : "<h2>ObservaSampa</h2>",
             "body" : get_param_sistema(db, 'institucional')
         },
-            {"title" : "<h2>Equipe>/h2>",
+            {"title" : "<h2>Equipe</h2>",
             "body" : get_param_sistema(db, 'equipe')
         }
         ],
