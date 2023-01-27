@@ -2,16 +2,10 @@
 from core.models.database import SessionLocal
 import core.models.basic as basicmodels
 import core.models.front_end as front_end_models
+from core.dao import get_db_obj
 
 from io import BytesIO
 from bs4 import BeautifulSoup
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
 
 
 def paginar_resultados(r, skip=None, limit=None):
@@ -104,32 +98,35 @@ def icone_tema(r):
 
 def nomes_niveis():
 
-    db_gen = get_db()
-    db = next(db_gen)
+    db = get_db_obj()
     model = basicmodels.NivelRegiao
     query = db.query(model)
     niveis = query.all()
+
+    db.close()
 
     return [n.sg_nivel_regiao for n in niveis]
 
 def nomes_temas():
 
-    db_gen = get_db()
-    db = next(db_gen)
+    db = get_db_obj()
     model = basicmodels.Tema
     query = db.query(model)
     query = query.filter(model.cd_tipo_situacao==1)
     temas = query.all()
 
+    db.close()
+
     return [tema.nm_tema for tema in temas]
 
 def siglas_tipo_conteudo():
 
-    db_gen = get_db()
-    db = next(db_gen)
+    db = get_db_obj()
     model = front_end_models.TipoConteudo
     query = db.query(model)
     tipos = query.all()
+
+    db.close()
 
     return [tipo.sg_tipo_conteudo for tipo in tipos]
 

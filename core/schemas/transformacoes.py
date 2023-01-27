@@ -44,6 +44,7 @@ def get_var_names(formula):
         formula_nova.append(item)
 
     db.close()
+    
     return ' '.join(formula_nova)
 
 def parse_fonte(fonte):
