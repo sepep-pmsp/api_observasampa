@@ -34,5 +34,8 @@ fi
 #build image
 sudo docker build -t api_observa .
 
+#cria arquivo de log se não existis
+touch -a api_log.txt
+
 #run container with restart
 sudo docker run -d --name api_observa --restart unless-stopped -p 80:80 api_observa

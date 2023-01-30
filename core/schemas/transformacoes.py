@@ -44,6 +44,7 @@ def get_var_names(formula):
         formula_nova.append(item)
 
     db.close()
+
     return ' '.join(formula_nova)
 
 def parse_fonte(fonte):
@@ -67,7 +68,7 @@ def html_sanitizer(v):
 
     soup = BeautifulSoup(v)
     allowed = {'h1', 'h2', 'h3', 'h4', 'h5', 'hr', 'p', 'a', 'table', 'td', 'tr', 'th',
-                'b', 'i', 'span', 'br', 'a'}
+                'b', 'i', 'span', 'br', 'a', 'br'}
     allowed_attr = {'name', 'href'}
     for tag in soup.find_all(name=True):
         if tag.name not in allowed:
