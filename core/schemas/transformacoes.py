@@ -3,6 +3,8 @@ from json import JSONDecodeError
 from bs4 import BeautifulSoup
 
 from ..utils.data_munging import remover_acentos
+from ..dao import get_db_obj
+from ..dao.basic import get_variavel
 
 def padrao_nome_regiao(nome):
 
@@ -29,6 +31,22 @@ def parse_formula(formula):
             return ''
     return str(formula)
 
+def get_var_names(formula):
+
+    db = get_db_obj()
+    formula_nova = []
+    for item in formula.split(' '):
+        if item.lower().startswith('v'):
+            var_obj = get_variavel(db, nm_resumido_variavel=item)
+            item = var_obj.nm_completo_variavel
+            #envelopa em aspas simples
+            item = f"'{item}'"
+        formula_nova.append(item)
+
+    db.close()
+
+    return ' '.join(formula_nova)
+
 def parse_fonte(fonte):
 
     try:
@@ -50,7 +68,7 @@ def html_sanitizer(v):
 
     soup = BeautifulSoup(v)
     allowed = {'h1', 'h2', 'h3', 'h4', 'h5', 'hr', 'p', 'a', 'table', 'td', 'tr', 'th',
-                'b', 'i', 'span', 'br', 'a'}
+                'b', 'i', 'span', 'br', 'a', 'br'}
     allowed_attr = {'name', 'href'}
     for tag in soup.find_all(name=True):
         if tag.name not in allowed:

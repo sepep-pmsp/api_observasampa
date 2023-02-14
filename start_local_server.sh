@@ -13,4 +13,6 @@ source venv/bin/activate
 
 pip install -r requirements.txt
 
-uvicorn api:app --host 0.0.0.0 --port 80
+touch -a api_log.txt
+
+uvicorn api:app --host 0.0.0.0 --port 80 > api_log.txt
