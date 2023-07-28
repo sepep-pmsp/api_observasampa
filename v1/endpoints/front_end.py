@@ -220,26 +220,24 @@ def dados_home():
     '''Mock endpoint que depois deve puxar os dados do banco.
     Esta sendo feito assim para permitir atualizacao dos dados na homepage posteriormente.'''
 
-    dados = [{
-        "titulo": "População (2021)",
-        "valor": "11.914.851 habitantes",
-        "fonte": "SEADE"
+    dados = [ 
+        { 
+            "titulo": "População 2022", 
+            "valor": "11.451.245 habitantes", 
+            "fonte": "IBGE – Censo 2022" 
         },
-        {
-        "titulo": "Produto Interno Bruto (2019) ",
-        "valor": "R$ 763,8 bilhões",
-        "fonte": "IBGE"
+        { 
+            "titulo": "Produto Interno Bruto (2020)", 
+            "valor": "R$ 748,8 bilhões", 
+            "fonte": "IBGE" 
         },
-        {
-        "titulo": "Área do Município",
-        "valor": "1.527,69 km²",
-        "fonte": "SMUL/PMSP"
-        },
-        {
-        "titulo": "Participação no PIB do Brasil (2019)",
-        "valor": "10,3%",
-        "fonte": "IBGE"
-        }]
+        { 
+            "titulo": "Participação no PIB do Brasil (2020)", 
+            "valor": "9,8%", 
+            "fonte": "IBGE" 
+        }
+
+    ] 
     
     return dados
 
