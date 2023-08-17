@@ -12,6 +12,22 @@ services:
     networks:
       - api_observa_network
 
+  web:
+    container_name: nginx
+    build: nginx
+    ports:
+        - 80:80
+        - 443:443
+    volumes:
+        - ./nginx/:/home
+        - ./nginx/logs/:/var/log/nginx/
+        - ./nginx/cache/:/data/nginx/cache
+    depends_on:
+        - api
+    networks:
+        - api_observasampa_network
+
+
 networks:
   api_observa_network:
     driver: bridge
