@@ -19,9 +19,8 @@ services:
         - 80:80
         - 443:443
     volumes:
-        - ./nginx/:/home
-        - ./nginx/logs/:/var/log/nginx/
-        - ./nginx/cache/:/data/nginx/cache
+        - ${NGINX_LOGS_VOLUME}:/var/log/nginx/
+        - ${NGINX_CACHE_VOLUME}:/data/nginx/cache
     depends_on:
         - api
     networks:
