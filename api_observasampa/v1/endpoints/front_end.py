@@ -222,19 +222,19 @@ def dados_home():
 
     dados = [ 
         { 
-            "titulo": "Testando o titulo", 
-            "valor": "10 mil coisas", 
-            "fonte": "Minha cabeça" 
+            "titulo": "População 2022", 
+            "valor": "11.451.245 habitantes", 
+            "fonte": "IBGE – Censo 2022" 
         },
         { 
-            "titulo": "Titulo", 
-            "valor": "7 bilhões de milhões", 
-            "fonte": "MCB" 
+            "titulo": "Produto Interno Bruto (2020)", 
+            "valor": "R$ 748,8 bilhões", 
+            "fonte": "IBGE" 
         },
         { 
-            "titulo": "Um indicador interessante", 
-            "valor": "5% por cento", 
-            "fonte": "Instituto de Pesquisas INteressantes" 
+            "titulo": "Participação no PIB do Brasil (2020)", 
+            "valor": "9,8%", 
+            "fonte": "IBGE" 
         }
 
     ] 
