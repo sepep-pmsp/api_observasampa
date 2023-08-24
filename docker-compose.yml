@@ -22,7 +22,7 @@ services:
         - ${NGINX_LOGS_VOLUME}:/var/log/nginx/
         - ${NGINX_CACHE_VOLUME}:/data/nginx/cache
     depends_on:
-        - api
+        - api_observasampa
     networks:
         - api_observasampa_network
 
