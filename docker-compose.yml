@@ -24,7 +24,7 @@ services:
     depends_on:
         - api_observasampa
     networks:
-        - api_observasampa_network
+        - api_observa_network
 
 
 networks:
