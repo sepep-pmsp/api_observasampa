@@ -1,7 +1,9 @@
 from sqlalchemy.orm import Session
 from sqlalchemy import distinct
 from sqlalchemy import func
+from typing import List
 
+from ..schemas.transformacoes import parse_formula, get_var_names
 from ..models import front_end as models
 from ..models import basic as basicmodels
 from ..schemas import front_end as schemas
@@ -141,9 +143,18 @@ def get_ficha_indicador(db: Session, cd_indicador: int):
     indicador = basicdao.get_indicador(db, cd_indicador)
     if indicador is None:
         return None
+    
+    #colocando os resultados
     resultados = basicdao.resultados_indicador(db, cd_indicador)
-
     indicador.__setattr__('resultados', resultados)
+
+    #agora vamos ter que substituir as variaveis
+    #porque a tabela cross indicador_variavel nao está mais sendo utilizada
+    #para isso, vamos ter que parsear a formula do indicador
+    formula = indicador.dc_formula_indicador
+    formula = parse_formula(formula)
+    variaveis = get_var_names(formula, return_vars=True)
+    indicador.__setattr__('variaveis', variaveis)
 
     return indicador
 
