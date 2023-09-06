@@ -235,17 +235,12 @@ def dados_home():
             "titulo": "Participação no PIB do Brasil (2020)", 
             "valor": "9,8%", 
             "fonte": "IBGE" 
-<<<<<<< HEAD:v1/endpoints/front_end.py
         },
          { 
             "titulo": "Área do Município", 
             "valor": "1.527,69 km²", 
             "fonte": "SMUL/PMSP" 
         }
-=======
-        }
-
->>>>>>> 31209b4178ec2d7618b54a50c35cfc624c164136:api_observasampa/v1/endpoints/front_end.py
     ] 
     
     return dados
