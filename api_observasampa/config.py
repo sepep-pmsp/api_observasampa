@@ -4,7 +4,7 @@ from core.utils.utils import build_conn_str
 from dotenv import load_dotenv
 import os
 
-load_dotenv(os.path.join('..', '.env'))
+load_dotenv()
 
 db_data = {
 'host': os.environ['HOST'],
