@@ -31,19 +31,23 @@ def parse_formula(formula):
             return ''
     return str(formula)
 
-def get_var_names(formula):
+def get_var_names(formula, return_vars=False):
 
     db = get_db_obj()
     formula_nova = []
+    vars = []
     for item in formula.split(' '):
         if item.lower().startswith('v'):
             var_obj = get_variavel(db, nm_resumido_variavel=item)
+            vars.append(var_obj)
             item = var_obj.nm_completo_variavel
             #envelopa em aspas simples
             item = f"'{item}'"
         formula_nova.append(item)
 
     db.close()
+    if return_vars:
+        return vars
 
     return ' '.join(formula_nova)
 

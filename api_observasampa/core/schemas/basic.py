@@ -41,8 +41,6 @@ class IndicadorReport(IndicadorBase):
     tx_fonte_indicador : Union[str, None] = None
     in_visibilidade : bool
     temas : List[TemaSimples] = []
-    variaveis: List[VariavelBase] = []
-
 
 class NivelRegiao(OrmBase):
 
