@@ -1,5 +1,4 @@
 #project specific ignores
-config.py
 prototype.ipynb
 api_log.txt
 
