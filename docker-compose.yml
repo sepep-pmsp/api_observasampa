@@ -8,6 +8,7 @@ services:
     image: api_observasampa
     environment:
       ENV: ${ENV}
+    env_file: .env
     restart: unless-stopped
     networks:
       - api_observa_network
