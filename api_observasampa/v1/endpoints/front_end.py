@@ -236,7 +236,7 @@ def dados_home():
             "valor": "9,8%", 
             "fonte": "IBGE" 
         },
-        { 
+         { 
             "titulo": "Área do Município", 
             "valor": "1.527,69 km²", 
             "fonte": "SMUL/PMSP" 

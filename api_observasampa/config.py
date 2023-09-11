@@ -16,6 +16,6 @@ db_data = {
 
 
 SQLALCHEMY_DATABASE_URL = build_conn_str(**db_data)
-REQUEST_TIMEOUT_ERROR=os.environ['REQUEST_TIMEOUT_ERROR']
+REQUEST_TIMEOUT_ERROR=int(os.environ['REQUEST_TIMEOUT_ERROR'])
 
         
