@@ -11,12 +11,14 @@ tema_indicador = Table(
     Column('cd_tipo_situacao', String)
 )
 
-variavel_indicador = Table(
-    "variavel_indicador",
-    metadata,
-    Column("cd_indicador", ForeignKey("indicador.cd_indicador")),
-    Column("cd_variavel", ForeignKey("variavel.cd_variavel")),
-)
+#tabela nao esta sendo usada no sistema (lixo no banco de dados)
+#relacao ocorre pelo string da formula de calculo
+#variavel_indicador = Table(
+#    "variavel_indicador",
+#    metadata,
+#    Column("cd_indicador", ForeignKey("indicador.cd_indicador")),
+#    Column("cd_variavel", ForeignKey("variavel.cd_variavel")),
+#)
 
 
 class Tema(Base):
@@ -70,7 +72,8 @@ class Indicador(Base):
     in_visibilidade = Column(Boolean)
     resultados = relationship("ResultadoIndicador")
     temas = relationship("Tema", secondary=tema_indicador)
-    variaveis = relationship("Variavel", secondary=variavel_indicador)
+    #desativando o relacionamento pois a tabela esta em desuso no sistema (lixo no banco)
+    #variaveis = relationship("Variavel", secondary=variavel_indicador)
 
     cd_tipo_situacao = Column(Integer)
 
@@ -143,7 +146,9 @@ class Variavel(Base):
     tx_fonte_variavel = Column(String)
     dc_nota_tecnica = Column(String)
     resultados = relationship("ResultadoVariavel", back_populates="variavel")
-    indicadores = relationship("Indicador", secondary=variavel_indicador, back_populates="variaveis")
+    #relacao entre indicador e variavel ocorre apenas pela formula de calculo
+    #tabela cross eh lixo no banco de dados
+    #indicadores = relationship("Indicador", secondary=variavel_indicador, back_populates="variaveis")
     cd_tipo_situacao = Column(Integer)
 
 class ResultadoVariavel(Base):
