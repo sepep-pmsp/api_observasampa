@@ -42,6 +42,8 @@ class ConteudoReport(ConteudoBase):
 
     tipo_conteudo : TipoConteudo
     tx_conteudo : Optional[str] = None
+    previous: Optional[int]
+    next: Optional[int]
 
     @validator('tx_conteudo', always=True)
     def sanitize(cls, v) -> str:
