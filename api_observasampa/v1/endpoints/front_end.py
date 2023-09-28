@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Query
+import pandas as pd
 
 from typing import List, Union, Dict
 
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, FileResponse
 
 from core.dao import get_db
 from core.dao import front_end as dao
@@ -14,6 +15,7 @@ from core.models import front_end as models
 from core.models import basic as basicmodels
 from core.schemas import front_end as schemas
 from core.schemas import basic as basicschemas
+from core.schemas.transformacoes import transformar_df
 from core.models.database import SessionLocal, engine
 
 from core.dao.filtros import siglas_tipo_conteudo, arquivo_conteudo, image_conteudo, icone_tema, image_dashboard
@@ -258,5 +260,20 @@ def post_search_indicador(search:schemas.SearchResultadosIndicador, skip: int = 
     response = dao.search_resultados_indicador(db, search, skip, limit)
 
     return response
+
+@app.get("/download_resultados_indicador",  response_class=FileResponse, tags=['Front-end'])
+def download_resultados(cd_indicador: int, db: Session = Depends(get_db)):
+
+    indicador = dao.get_ficha_indicador(db, cd_indicador=cd_indicador)
+    if indicador is None:
+        raise HTTPException(status_code=404, detail=f"Indicador {cd_indicador} Não Encontrado")
+
+    df = transformar_df(indicador)
+
+    return StreamingResponse(
+        iter([df.to_csv(sep=';', encoding='latin-1')]),
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename=data.csv"}
+    )
 
 
