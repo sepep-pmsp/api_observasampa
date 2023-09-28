@@ -2,6 +2,7 @@ import json
 from json import JSONDecodeError
 from bs4 import BeautifulSoup
 import pandas as pd
+from collections import OrderedDict
 
 from ..utils.data_munging import remover_acentos
 from ..dao import get_db_obj
@@ -95,6 +96,25 @@ def fill_na_resultados(formatados:dict)->dict:
 
     return formatados_final
 
+def ordenar_results_por_nivel_regiao(formatados:dict)->dict:
+
+    ordem = {
+        'País' : 1,
+        'Estado' : 2,
+        'Município' : 3,
+        'Subprefeitura' : 4,
+        'Distrito' : 5,
+    }
+
+    em_ordem = OrderedDict()
+    
+    niveis_ordenados = sorted(list(formatados.keys()), key = lambda x: ordem.get(x, 1000), reverse=False)
+
+    for nivel in niveis_ordenados:
+        em_ordem[nivel]=formatados[nivel]
+    
+    return em_ordem
+
 
 def format_resultados_front(v):
 
@@ -118,6 +138,7 @@ def format_resultados_front(v):
         formatados[nivel][regiao][periodo] = valor
     
     formatados_final = fill_na_resultados(formatados)
+    formatados_final = ordenar_results_por_nivel_regiao(formatados_final)
 
     return formatados_final
 
