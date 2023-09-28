@@ -2,6 +2,7 @@ import json
 from json import JSONDecodeError
 from bs4 import BeautifulSoup
 import pandas as pd
+from collections import OrderedDict
 
 from ..utils.data_munging import remover_acentos
 from ..dao import get_db_obj
@@ -86,6 +87,35 @@ def html_sanitizer(v):
     return soup.prettify()
             
 
+def fill_na_resultados(formatados:dict)->dict:
+
+    formatados_final = {}
+    for nivel_name, nivel_values in formatados.items():
+        df = pd.DataFrame(nivel_values).fillna('')
+        formatados_final[nivel_name] = df.to_dict()
+
+    return formatados_final
+
+def ordenar_results_por_nivel_regiao(formatados:dict)->dict:
+
+    ordem = {
+        'País' : 1,
+        'Estado' : 2,
+        'Município' : 3,
+        'Subprefeitura' : 4,
+        'Distrito' : 5,
+    }
+
+    em_ordem = OrderedDict()
+    
+    niveis_ordenados = sorted(list(formatados.keys()), key = lambda x: ordem.get(x, 1000), reverse=False)
+
+    for nivel in niveis_ordenados:
+        em_ordem[nivel]=formatados[nivel]
+    
+    return em_ordem
+
+
 def format_resultados_front(v):
 
     formatados = {}
@@ -107,10 +137,8 @@ def format_resultados_front(v):
         #porque nao deveria ter mais de um valor
         formatados[nivel][regiao][periodo] = valor
     
-    formatados_final = {}
-    for nivel_name, nivel_values in formatados.items():
-        df = pd.DataFrame(nivel_values).fillna('')
-        formatados_final[nivel_name] = df.to_dict()
+    formatados_final = fill_na_resultados(formatados)
+    formatados_final = ordenar_results_por_nivel_regiao(formatados_final)
 
     return formatados_final
 
