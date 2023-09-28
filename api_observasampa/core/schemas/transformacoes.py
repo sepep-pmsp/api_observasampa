@@ -1,6 +1,7 @@
 import json
 from json import JSONDecodeError
 from bs4 import BeautifulSoup
+import pandas as pd
 
 from ..utils.data_munging import remover_acentos
 from ..dao import get_db_obj
@@ -106,7 +107,12 @@ def format_resultados_front(v):
         #porque nao deveria ter mais de um valor
         formatados[nivel][regiao][periodo] = valor
     
-    return formatados
+    formatados_final = {}
+    for nivel_name, nivel_values in formatados.items():
+        df = pd.DataFrame(nivel_values).fillna('')
+        formatados_final[nivel_name] = df.to_dict()
+
+    return formatados_final
 
 
 def filtrar_temas_front(v):
