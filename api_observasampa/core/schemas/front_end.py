@@ -4,7 +4,7 @@ from pydantic import BaseModel, validator, root_validator
 from datetime import datetime
 
 from .transformacoes import (parse_formula, parse_fonte, html_sanitizer, padrao_nome_regiao, 
-                            format_resultados_front, get_var_names)
+                            format_resultados_front, get_var_names, filtrar_temas_front)
 
 from . import basic as basicschemas
 
@@ -53,6 +53,7 @@ class TemaBase(OrmBase):
     
     cd_tema : int
     nm_tema : str
+    cd_tipo_situacao : int
 
 
 class IndicadorBaseFront(OrmBase):
@@ -138,6 +139,13 @@ class FichaIndicador(OrmBase):
         if v is None:
             return []
         return format_resultados_front(v)
+    
+    @validator('temas', always=True)
+    def filtrar_temas(cls, v)->List[TemaBase]:
+
+        if v is None:
+            return []
+        return filtrar_temas_front(v)
 
 
 class TemaFull(TemaBase):

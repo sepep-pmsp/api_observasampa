@@ -107,3 +107,12 @@ def format_resultados_front(v):
         formatados[nivel][regiao][periodo] = valor
     
     return formatados
+
+
+def filtrar_temas_front(v):
+
+    temas_validos = [tema
+                     for tema in v
+                     if tema.cd_tipo_situacao == 1]
+    
+    return temas_validos
