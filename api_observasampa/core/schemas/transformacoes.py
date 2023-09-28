@@ -150,3 +150,40 @@ def filtrar_temas_front(v):
                      if tema.cd_tipo_situacao == 1]
     
     return temas_validos
+
+def transformar_df(indicador):
+
+    resultados = indicador.resultados
+    formatados = format_resultados_front(resultados)
+    
+    dfs = []
+    for nivel, valores in formatados.items():
+        df = pd.DataFrame(valores)
+        df = df.T
+        df['nivel_regional'] = nivel
+        df['indicador'] = indicador.nm_indicador
+        df = df.reset_index()
+        df = df.rename({'index' : 'região'}, axis=1)
+        
+
+        def ordem(x):
+
+            ordem = {
+            'região' : 1,
+            'nivel_regional' : 2,
+            'indicador' : 3
+            }
+
+            try:
+                return ordem[x]
+            except KeyError:
+                return int(x)
+        
+
+        cols = sorted(df.columns, key=ordem)
+        df = df[cols]
+        dfs.append(df)
+    
+    df = pd.concat(dfs)
+
+    return df
