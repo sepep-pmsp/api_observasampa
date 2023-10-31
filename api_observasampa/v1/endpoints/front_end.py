@@ -94,7 +94,6 @@ def read_conteudos(sg_tipo_conteudo : str = Query(enum=TIPOS_CONTEUDO), truncate
 
     for r in resultados:
         if r.aq_imagem_conteudo:
-            print(r.aq_imagem_conteudo)
             r.__setattr__('has_arq', True)
         if r.aq_conteudo:
             r.__setattr__('has_img', True)
@@ -112,10 +111,7 @@ def get_conteudo(cd_conteudo : int, db: Session = Depends(get_db)):
         conteudo.__setattr__('has_arq', True)
     if conteudo.aq_conteudo:
         conteudo.__setattr__('has_img', True)
-    print(conteudo.cd_tipo_conteudo)
-    print(type(conteudo.cd_tipo_conteudo))
     conteudos_mesmo_tipo = dao.list_conteudos_por_tipo(db, cd_tipo_conteudo=int(conteudo.cd_tipo_conteudo))
-    print(conteudos_mesmo_tipo)
     for i, cont in enumerate(conteudos_mesmo_tipo):
 
         if cont.cd_conteudo == conteudo.cd_conteudo:
