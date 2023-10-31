@@ -3,6 +3,7 @@ from json import JSONDecodeError
 from bs4 import BeautifulSoup
 import pandas as pd
 from collections import OrderedDict
+import numpy as np
 
 from ..utils.data_munging import remover_acentos
 from ..dao import get_db_obj
@@ -157,7 +158,11 @@ def arrumar_datatypes_df(df:pd.DataFrame)->pd.DataFrame:
     #transformando colunas numericas
     cols_dados = [col for col in df.columns if col not in ('região', 'nivel_regional', 'indicador')]
     for col in cols_dados:
+        #lidando com os zeros
+        df[col] = df[col].apply(lambda x: '0' if x == 0 else x)
         df[col] = df[col].astype(str)
+        #lidando com as strings vazias
+        df[col] = df[col].apply(lambda x: np.nan if (x == 'None' or x == '' or x == 'nan') else x)
         try:
             df[col] = df[col].astype(int)
         except ValueError:
