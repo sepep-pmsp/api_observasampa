@@ -151,6 +151,40 @@ def filtrar_temas_front(v):
     
     return temas_validos
 
+
+def arrumar_datatypes_df(df:pd.DataFrame)->pd.DataFrame:
+
+    #transformando colunas numericas
+    cols_dados = [col for col in df.columns if col not in ('região', 'nivel_regional', 'indicador')]
+    for col in cols_dados:
+        df[col] = df[col].astype(str)
+        try:
+            df[col] = df[col].astype(int)
+        except ValueError:
+            try:
+                df[col] = df[col].astype(float)
+            except ValueError as e:
+                #mantem como string mesmo
+                print(f'dei erro: {e} - na coluna {col}')
+
+    return df
+
+
+def ordem_colunas(col:str)->int:
+
+        ordem = {
+        'região' : 1,
+        'nivel_regional' : 2,
+        'indicador' : 3
+        }
+
+        try:
+            return ordem[col]
+        except KeyError:
+            return int(col)
+            
+
+
 def transformar_df(indicador):
 
     resultados = indicador.resultados
@@ -164,26 +198,15 @@ def transformar_df(indicador):
         df['indicador'] = indicador.nm_indicador
         df = df.reset_index()
         df = df.rename({'index' : 'região'}, axis=1)
-        
 
-        def ordem(x):
-
-            ordem = {
-            'região' : 1,
-            'nivel_regional' : 2,
-            'indicador' : 3
-            }
-
-            try:
-                return ordem[x]
-            except KeyError:
-                return int(x)
-        
-
-        cols = sorted(df.columns, key=ordem)
+        #ordena as colunas
+        cols = sorted(df.columns, key=ordem_colunas)
         df = df[cols]
         dfs.append(df)
     
     df = pd.concat(dfs)
+    
+    #deixa os dados em float quando couber
+    df = arrumar_datatypes_df(df)
 
     return df

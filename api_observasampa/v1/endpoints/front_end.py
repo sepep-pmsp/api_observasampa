@@ -283,9 +283,9 @@ def download_resultados(cd_indicador: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail=f"Indicador {cd_indicador} Não Encontrado")
 
     df = transformar_df(indicador)
-
+    print(df.dtypes)
     return StreamingResponse(
-        iter([df.to_csv(sep=';', encoding='latin-1')]),
+        iter([df.to_csv(sep=';', encoding='latin-1', decimal=',', quotechar='"')]),
         media_type="text/csv",
         headers={"Content-Disposition": f"attachment; filename=data.csv"}
     )
