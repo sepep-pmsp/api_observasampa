@@ -1,11 +1,12 @@
 from fastapi import APIRouter, Query
+import pandas as pd
 
 from typing import List, Union, Dict
 
 from fastapi import Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from fastapi.responses import StreamingResponse
+from fastapi.responses import StreamingResponse, FileResponse
 
 from core.dao import get_db
 from core.dao import front_end as dao
@@ -14,6 +15,7 @@ from core.models import front_end as models
 from core.models import basic as basicmodels
 from core.schemas import front_end as schemas
 from core.schemas import basic as basicschemas
+from core.schemas.transformacoes import transformar_df
 from core.models.database import SessionLocal, engine
 
 from core.dao.filtros import siglas_tipo_conteudo, arquivo_conteudo, image_conteudo, icone_tema, image_dashboard
@@ -92,7 +94,6 @@ def read_conteudos(sg_tipo_conteudo : str = Query(enum=TIPOS_CONTEUDO), truncate
 
     for r in resultados:
         if r.aq_imagem_conteudo:
-            print(r.aq_imagem_conteudo)
             r.__setattr__('has_arq', True)
         if r.aq_conteudo:
             r.__setattr__('has_img', True)
@@ -103,12 +104,27 @@ def read_conteudos(sg_tipo_conteudo : str = Query(enum=TIPOS_CONTEUDO), truncate
 def get_conteudo(cd_conteudo : int, db: Session = Depends(get_db)):
 
     conteudo = dao.get_conteudo(db, cd_conteudo=cd_conteudo)
+
     if conteudo is None:
         raise HTTPException(status_code=404, detail=f"Conteudo {cd_conteudo} não Encontrado")
     if conteudo.aq_imagem_conteudo:
         conteudo.__setattr__('has_arq', True)
     if conteudo.aq_conteudo:
         conteudo.__setattr__('has_img', True)
+    conteudos_mesmo_tipo = dao.list_conteudos_por_tipo(db, cd_tipo_conteudo=int(conteudo.cd_tipo_conteudo))
+    for i, cont in enumerate(conteudos_mesmo_tipo):
+
+        if cont.cd_conteudo == conteudo.cd_conteudo:
+            #se for o primeiro, o previous eh o ultimo
+            if i == 0:
+                conteudo.__setattr__('previous', None)
+            else:
+                conteudo.__setattr__('previous', conteudos_mesmo_tipo[i-1].cd_conteudo)
+            if i == len(conteudos_mesmo_tipo):
+                conteudo.__setattr__('next', None)
+            else:
+                conteudo.__setattr__('next', conteudos_mesmo_tipo[i+1].cd_conteudo)
+
     return conteudo
 
 @app.get("/conteudos/{cd_conteudo}/imagem", tags=['Front-end'], 
@@ -258,5 +274,20 @@ def post_search_indicador(search:schemas.SearchResultadosIndicador, skip: int = 
     response = dao.search_resultados_indicador(db, search, skip, limit)
 
     return response
+
+@app.get("/download_resultados_indicador",  response_class=FileResponse, tags=['Front-end'])
+def download_resultados(cd_indicador: int, db: Session = Depends(get_db)):
+
+    indicador = dao.get_ficha_indicador(db, cd_indicador=cd_indicador)
+    if indicador is None:
+        raise HTTPException(status_code=404, detail=f"Indicador {cd_indicador} Não Encontrado")
+
+    df = transformar_df(indicador)
+    print(df.dtypes)
+    return StreamingResponse(
+        iter([df.to_csv(sep=';', encoding='latin-1', decimal=',', quotechar='"')]),
+        media_type="text/csv",
+        headers={"Content-Disposition": f"attachment; filename=data.csv"}
+    )
 
 

@@ -1,6 +1,9 @@
 import json
 from json import JSONDecodeError
 from bs4 import BeautifulSoup
+import pandas as pd
+from collections import OrderedDict
+import numpy as np
 
 from ..utils.data_munging import remover_acentos
 from ..dao import get_db_obj
@@ -85,6 +88,35 @@ def html_sanitizer(v):
     return soup.prettify()
             
 
+def fill_na_resultados(formatados:dict)->dict:
+
+    formatados_final = {}
+    for nivel_name, nivel_values in formatados.items():
+        df = pd.DataFrame(nivel_values).fillna('')
+        formatados_final[nivel_name] = df.to_dict()
+
+    return formatados_final
+
+def ordenar_results_por_nivel_regiao(formatados:dict)->dict:
+
+    ordem = {
+        'País' : 1,
+        'Estado' : 2,
+        'Município' : 3,
+        'Subprefeitura' : 4,
+        'Distrito' : 5,
+    }
+
+    em_ordem = OrderedDict()
+    
+    niveis_ordenados = sorted(list(formatados.keys()), key = lambda x: ordem.get(x, 1000), reverse=False)
+
+    for nivel in niveis_ordenados:
+        em_ordem[nivel]=formatados[nivel]
+    
+    return em_ordem
+
+
 def format_resultados_front(v):
 
     formatados = {}
@@ -106,4 +138,80 @@ def format_resultados_front(v):
         #porque nao deveria ter mais de um valor
         formatados[nivel][regiao][periodo] = valor
     
-    return formatados
+    formatados_final = fill_na_resultados(formatados)
+    formatados_final = ordenar_results_por_nivel_regiao(formatados_final)
+
+    return formatados_final
+
+
+def filtrar_temas_front(v):
+
+    temas_validos = [tema
+                     for tema in v
+                     if tema.cd_tipo_situacao == 1]
+    
+    return temas_validos
+
+
+def arrumar_datatypes_df(df:pd.DataFrame)->pd.DataFrame:
+
+    #transformando colunas numericas
+    cols_dados = [col for col in df.columns if col not in ('região', 'nivel_regional', 'indicador')]
+    for col in cols_dados:
+        #lidando com os zeros
+        df[col] = df[col].apply(lambda x: '0' if x == 0 else x)
+        df[col] = df[col].astype(str)
+        #lidando com as strings vazias
+        df[col] = df[col].apply(lambda x: np.nan if (x == 'None' or x == '' or x == 'nan') else x)
+        try:
+            df[col] = df[col].astype(int)
+        except ValueError:
+            try:
+                df[col] = df[col].astype(float)
+            except ValueError as e:
+                #mantem como string mesmo
+                print(f'dei erro: {e} - na coluna {col}')
+
+    return df
+
+
+def ordem_colunas(col:str)->int:
+
+        ordem = {
+        'região' : 1,
+        'nivel_regional' : 2,
+        'indicador' : 3
+        }
+
+        try:
+            return ordem[col]
+        except KeyError:
+            return int(col)
+            
+
+
+def transformar_df(indicador):
+
+    resultados = indicador.resultados
+    formatados = format_resultados_front(resultados)
+    
+    dfs = []
+    for nivel, valores in formatados.items():
+        df = pd.DataFrame(valores)
+        df = df.T
+        df['nivel_regional'] = nivel
+        df['indicador'] = indicador.nm_indicador
+        df = df.reset_index()
+        df = df.rename({'index' : 'região'}, axis=1)
+
+        #ordena as colunas
+        cols = sorted(df.columns, key=ordem_colunas)
+        df = df[cols]
+        dfs.append(df)
+    
+    df = pd.concat(dfs)
+    
+    #deixa os dados em float quando couber
+    df = arrumar_datatypes_df(df)
+
+    return df

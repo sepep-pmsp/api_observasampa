@@ -90,13 +90,33 @@ def list_conteudos_por_tipo(db: Session, cd_tipo_conteudo: int, skip: int = None
     
     return results
 
+def set_next_previous_conteudo(db: Session, conteudo:models.Conteudo)->models.Conteudo:
+
+    conteudos_mesmo_tipo = list_conteudos_por_tipo(db, cd_tipo_conteudo=int(conteudo.cd_tipo_conteudo))
+    for i, cont in enumerate(conteudos_mesmo_tipo):
+
+        if cont.cd_conteudo == conteudo.cd_conteudo:
+            #se for o primeiro, o previous eh o ultimo
+            if i == 0:
+                conteudo.__setattr__('previous', None)
+            else:
+                conteudo.__setattr__('previous', conteudos_mesmo_tipo[i-1].cd_conteudo)
+            if i == len(conteudos_mesmo_tipo):
+                conteudo.__setattr__('next', None)
+            else:
+                conteudo.__setattr__('next', conteudos_mesmo_tipo[i+1].cd_conteudo)
+
 def get_conteudo(db: Session, cd_conteudo: int):
 
     model = models.Conteudo
     query = db.query(model)
     query = query.filter(model.cd_conteudo==cd_conteudo)
 
-    return query.first()
+    conteudo = query.first()
+
+    set_next_previous_conteudo(db, conteudo)
+
+    return conteudo
 
 def get_arq_tema(db: Session, cd_tema: int):
 
