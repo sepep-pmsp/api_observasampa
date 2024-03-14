@@ -93,6 +93,7 @@ def list_conteudos_por_tipo(db: Session, cd_tipo_conteudo: int, skip: int = None
 def set_next_previous_conteudo(db: Session, conteudo:models.Conteudo)->models.Conteudo:
 
     conteudos_mesmo_tipo = list_conteudos_por_tipo(db, cd_tipo_conteudo=int(conteudo.cd_tipo_conteudo))
+    print(conteudos_mesmo_tipo)
     for i, cont in enumerate(conteudos_mesmo_tipo):
 
         if cont.cd_conteudo == conteudo.cd_conteudo:
