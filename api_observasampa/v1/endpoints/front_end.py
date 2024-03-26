@@ -111,19 +111,6 @@ def get_conteudo(cd_conteudo : int, db: Session = Depends(get_db)):
         conteudo.__setattr__('has_arq', True)
     if conteudo.aq_conteudo:
         conteudo.__setattr__('has_img', True)
-    conteudos_mesmo_tipo = dao.list_conteudos_por_tipo(db, cd_tipo_conteudo=int(conteudo.cd_tipo_conteudo))
-    for i, cont in enumerate(conteudos_mesmo_tipo):
-
-        if cont.cd_conteudo == conteudo.cd_conteudo:
-            #se for o primeiro, o previous eh o ultimo
-            if i == 0:
-                conteudo.__setattr__('previous', None)
-            else:
-                conteudo.__setattr__('previous', conteudos_mesmo_tipo[i-1].cd_conteudo)
-            if i == len(conteudos_mesmo_tipo):
-                conteudo.__setattr__('next', None)
-            else:
-                conteudo.__setattr__('next', conteudos_mesmo_tipo[i+1].cd_conteudo)
 
     return conteudo
 
