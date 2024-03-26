@@ -111,7 +111,7 @@ def get_conteudo(cd_conteudo : int, db: Session = Depends(get_db)):
         conteudo.__setattr__('has_arq', True)
     if conteudo.aq_conteudo:
         conteudo.__setattr__('has_img', True)
-    
+
     return conteudo
 
 @app.get("/conteudos/{cd_conteudo}/imagem", tags=['Front-end'], 
