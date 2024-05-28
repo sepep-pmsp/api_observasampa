@@ -226,24 +226,25 @@ def dados_home():
     dados = [ 
         { 
             "titulo": "População 2022", 
-            "valor": "11.451.245 habitantes", 
+            "valor": "11.451.999 habitantes", 
             "fonte": "IBGE – Censo 2022" 
         },
-        { 
-            "titulo": "Produto Interno Bruto (2020)", 
-            "valor": "R$ 748,8 bilhões", 
-            "fonte": "IBGE" 
-        },
-        { 
-            "titulo": "Participação no PIB do Brasil (2020)", 
-            "valor": "9,8%", 
-            "fonte": "IBGE" 
-        },
-         { 
+                 { 
             "titulo": "Área do Município", 
             "valor": "1.527,69 km²", 
             "fonte": "SMUL/PMSP" 
+        },
+        { 
+            "titulo": "Produto Interno Bruto (2021)", 
+            "valor": "R$ 829,0 bilhões", 
+            "fonte": "IBGE" 
+        },
+        { 
+            "titulo": "Participação no PIB do Brasil (2021)", 
+            "valor": "9,2%", 
+            "fonte": "IBGE" 
         }
+
     ] 
     
     return dados
