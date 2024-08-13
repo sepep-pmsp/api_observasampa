@@ -142,12 +142,12 @@ class FichaIndicador(OrmBase):
             return []
         return format_resultados_front(v)
     
-    @validator('temas', always=True)
-    def filtrar_temas(cls, v)->List[TemaBase]:
+    @root_validator
+    def filtrar_temas(cls, values)->List[TemaBase]:
 
-        if v is None:
+        if values.get('temas') is None:
             return []
-        return filtrar_temas_front(v)
+        return filtrar_temas_front(values)
 
 
 class TemaFull(TemaBase):

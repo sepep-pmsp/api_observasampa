@@ -8,6 +8,7 @@ import numpy as np
 from ..utils.data_munging import remover_acentos
 from ..dao import get_db_obj
 from ..dao.basic import get_variavel
+from ..models.basic import tema_indicador
 
 def padrao_nome_regiao(nome):
 
@@ -144,13 +145,29 @@ def format_resultados_front(v):
     return formatados_final
 
 
-def filtrar_temas_front(v):
+def filtrar_temas_front(values):
 
+
+    temas = values.get('temas')
     temas_validos = [tema
-                     for tema in v
+                     for tema in temas
                      if tema.cd_tipo_situacao == 1]
     
-    return temas_validos
+
+    db = get_db_obj()
+    cd_indicador = values.get('cd_indicador')
+    relacionamentos = db.query(tema_indicador).filter(tema_indicador.c.cd_indicador==cd_indicador)
+    relacionamentos_ativos = relacionamentos.filter(tema_indicador.c.cd_tipo_situacao==1).all()
+    codigos_temas_ativos = [row.cd_tema for row in relacionamentos_ativos]
+
+    temas_ativos = [
+        tema for tema in temas_validos 
+        if tema.cd_tema in codigos_temas_ativos
+        ]
+    
+    values['temas'] = temas_ativos
+    
+    return values
 
 
 def arrumar_datatypes_df(df:pd.DataFrame)->pd.DataFrame:
