@@ -142,7 +142,7 @@ def format_resultados_front(v):
     formatados_final = fill_na_resultados(formatados)
     formatados_final = ordenar_results_por_nivel_regiao(formatados_final)
 
-    return [formatados_final]
+    return formatados_final
 
 
 def filtrar_temas_front(model_obj):

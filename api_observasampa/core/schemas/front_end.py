@@ -117,7 +117,7 @@ class FichaIndicador(OrmBase):
     in_visibilidade : Optional[bool] = None
     temas : List[TemaBase]
     variaveis : List[FichaVariavel]
-    resultados : List
+    resultados : dict
 
     @field_validator('dc_formula_indicador')
     @classmethod
@@ -137,12 +137,12 @@ class FichaIndicador(OrmBase):
             return ''
         return parse_fonte(v)
 
-    @field_validator('resultados')
+    @field_validator('resultados', mode='before')
     @classmethod
     def format_resultados(cls, v) -> List:
         
         if v is None:
-            return []
+            return {}
         return format_resultados_front(v)
     
     @model_validator(mode='after')
