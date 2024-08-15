@@ -1,0 +1,7 @@
+<script>
+    fetch("http://127.0.0.1:8000/v1/basic/temas/").then((Response) => {
+        return Response.json()
+    }).then((data) => {
+        console.log(data);
+    })
+</script>
