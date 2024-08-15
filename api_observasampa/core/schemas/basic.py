@@ -53,7 +53,7 @@ class RegiaoSimples(OrmBase):
     cd_regiao : int
     sg_regiao : str
     nm_regiao : str
-    cd_nivel_regiao : str
+    cd_nivel_regiao : int
 
 class Regiao(RegiaoSimples):
 
