@@ -128,7 +128,7 @@ def format_resultados_front(v):
         regiao = str(regiao).title()
         periodo = r.periodo.vl_periodo
         valor = r.vl_indicador_resultado
-
+        valor = float(valor)
         if nivel not in formatados:
             formatados[nivel] = {}
         if regiao not in formatados[nivel]:
