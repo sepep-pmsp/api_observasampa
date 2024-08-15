@@ -8,7 +8,7 @@ from .transformacoes import padrao_nome_regiao
 class OrmBase(BaseModel):
     
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class TemaSimples(OrmBase):

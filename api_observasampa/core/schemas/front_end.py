@@ -12,7 +12,7 @@ from . import basic as basicschemas
 class OrmBase(BaseModel):
     
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 
 class ConteudoBase(OrmBase):
@@ -142,7 +142,7 @@ class FichaIndicador(OrmBase):
             return []
         return format_resultados_front(v)
     
-    @root_validator
+    @root_validator(pre=True)
     def filtrar_temas(cls, values)->List[TemaBase]:
 
         if values.get('temas') is None:
