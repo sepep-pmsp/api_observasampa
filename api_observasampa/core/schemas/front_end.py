@@ -74,7 +74,7 @@ class Dashboard(DashboardSimples):
 
     dc_dashboard : Union[str, None] = None 
     link_dashboard : str
-    nr_ordem_exibicao : str
+    nr_ordem_exibicao : int
     dt_criacao : datetime
     cd_status_dashboard : str
     in_publicado : str
