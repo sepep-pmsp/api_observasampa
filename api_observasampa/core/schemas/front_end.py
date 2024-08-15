@@ -1,6 +1,6 @@
 from typing import List, Optional, Union
 
-from pydantic import BaseModel, validator, root_validator
+from pydantic import BaseModel, field_validator, model_validator
 from datetime import datetime
 
 from .transformacoes import (parse_formula, parse_fonte, html_sanitizer, padrao_nome_regiao, 
@@ -45,7 +45,7 @@ class ConteudoReport(ConteudoBase):
     previous: Optional[int]
     next: Optional[int]
 
-    @validator('tx_conteudo', always=True)
+    @field_validator('tx_conteudo')
     def sanitize(cls, v) -> str:
         if v:
             return html_sanitizer(v)
@@ -119,7 +119,8 @@ class FichaIndicador(OrmBase):
     variaveis : List[FichaVariavel]
     resultados : List
 
-    @validator('dc_formula_indicador', always=True)
+    @field_validator('dc_formula_indicador')
+    @classmethod
     def formula_validator(cls, v) -> Union[str, None]:
         if v is None:
             return ''
@@ -128,26 +129,28 @@ class FichaIndicador(OrmBase):
 
         return formula
 
-    @validator('tx_fonte_indicador', always=True)
+    @field_validator('tx_fonte_indicador')
+    @classmethod
     def fonte_validator(cls, v) -> Union[str, None]:
         
         if v is None:
             return ''
         return parse_fonte(v)
 
-    @validator('resultados', always=True)
+    @field_validator('resultados')
+    @classmethod
     def format_resultados(cls, v) -> List:
         
         if v is None:
             return []
         return format_resultados_front(v)
     
-    @root_validator(pre=True)
-    def filtrar_temas(cls, values)->List[TemaBase]:
+    @model_validator(mode='after')
+    def filtrar_temas(self)->any:
 
-        if values.get('temas') is None:
-            return []
-        return filtrar_temas_front(values)
+        if not self.temas:
+            return self
+        return filtrar_temas_front(self)
 
 
 class TemaFull(TemaBase):
@@ -162,7 +165,8 @@ class Secao(BaseModel):
     title: str
     body: str
 
-    @validator('body', always=True)
+    @field_validator('body')
+    @classmethod
     def sanitize(cls, v) -> str:
         if v:
             return html_sanitizer(v)
@@ -174,7 +178,8 @@ class Institucional(BaseModel):
     footer: str
 
 
-    @validator('footer', always=True)
+    @field_validator('footer')
+    @classmethod
     def sanitize(cls, v) -> str:
         if v:
             return html_sanitizer(v)

@@ -145,17 +145,16 @@ def format_resultados_front(v):
     return formatados_final
 
 
-def filtrar_temas_front(values):
+def filtrar_temas_front(model_obj):
 
-
-    temas = values.get('temas')
+    temas = model_obj.temas
     temas_validos = [tema
                      for tema in temas
                      if tema.cd_tipo_situacao == 1]
     
 
     db = get_db_obj()
-    cd_indicador = values.get('cd_indicador')
+    cd_indicador = model_obj.cd_indicador
     relacionamentos = db.query(tema_indicador).filter(tema_indicador.c.cd_indicador==cd_indicador)
     relacionamentos_ativos = relacionamentos.filter(tema_indicador.c.cd_tipo_situacao==1).all()
     codigos_temas_ativos = [row.cd_tema for row in relacionamentos_ativos]
@@ -165,9 +164,9 @@ def filtrar_temas_front(values):
         if tema.cd_tema in codigos_temas_ativos
         ]
     
-    values['temas'] = temas_ativos
+    setattr(model_obj, 'temas', temas_ativos)
     
-    return values
+    return model_obj
 
 
 def arrumar_datatypes_df(df:pd.DataFrame)->pd.DataFrame:
