@@ -6,6 +6,7 @@ import time
 from fastapi import FastAPI, Request, Response, HTTPException
 from fastapi.responses import JSONResponse
 from starlette.status import HTTP_504_GATEWAY_TIMEOUT
+from fastapi.middleware.cors import CORSMiddleware
 
 from config import REQUEST_TIMEOUT_ERROR
 
@@ -33,6 +34,19 @@ app = FastAPI(openapi_url="/",
     )
 
 
+#middleware para liberar CORS
+origins = [
+    "*", #libera tudo
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 #middleware to handle timeouts
 @app.middleware("http")
 async def timeout_middleware(request: Request, call_next):
@@ -48,5 +62,6 @@ async def timeout_middleware(request: Request, call_next):
 
 app.include_router(basic_app, prefix="/v1/basic")
 app.include_router(front_end, prefix="/v1/front_end")
+
 
 
