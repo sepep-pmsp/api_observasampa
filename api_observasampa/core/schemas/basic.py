@@ -1,6 +1,6 @@
 from typing import List, Union, Optional
 
-from pydantic import BaseModel, validator 
+from pydantic import BaseModel, model_validator 
 from datetime import datetime
 
 from .transformacoes import padrao_nome_regiao
@@ -59,9 +59,12 @@ class Regiao(RegiaoSimples):
 
     nm_regiao_padrao : Optional[str] = None
 
-    @validator('nm_regiao_padrao', always=True)
-    def ab(cls, v, values) -> str:
-        return padrao_nome_regiao(values['nm_regiao'])
+    @model_validator(mode='after')
+    def validar_nm_regiao(self) -> str:
+        nome_padrao = padrao_nome_regiao(self.nm_regiao)
+        setattr(self, 'nm_regiao_padrao', nome_padrao)
+
+        return self
 
         
 
